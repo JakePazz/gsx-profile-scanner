@@ -1,11 +1,25 @@
+# External imports
 import typer
 from rich import print as prnt
 from rich.panel import Panel
 from rich.markdown import Markdown
 from rich.table import Table
 import pandas as pd
+import json
+
+# Internal imports
+import actions as actn
+from setup import setup
+
 
 def main():
+    
+    # TODO: Add error checking for this initial check incase the file or configs folder does not exist
+    with open("./configs/program_config.json", "r") as file:
+        config = json.load(file)
+        if config["successfull_configuration"] != "true":
+            setup()
+
 
     commands_table = Table("Command", "Trigger", "Description", style="bold yellow")
     commands_table.add_row("Scan Folder","scan", "Scan the specified profiles folder for GSX profiles")
@@ -23,12 +37,12 @@ def main():
 """), title="Instructions", style="bold red", title_align="left")
 
 )
-    
+    # TODO: Add option to mass install profiles from a specified folder
+
     input = typer.prompt("Action")
 
-
     if input == "scan":
-        scan()
+        actn.scan()
         main()
     elif input == "settings":
         main()
@@ -37,15 +51,6 @@ def main():
     elif input == "exit":
         print("Goodbye")
         raise typer.Exit()
-
-def scan():
-    pass
-
-def settings():
-    pass
-
-def help():
-    pass
 
 
 
