@@ -1,4 +1,0 @@
-[info] [2024-03-24T02:58:59.120108] This is a test message[info] [2024-03-24T02:59:28.222910] This is a test message[warn] [2024-03-24T02:59:28.223911] Another message[error] [2024-03-24T02:59:28.223911] And another
-[info] [2024-03-24T02:59:39.175477] This is a test message
-[warn] [2024-03-24T02:59:39.175477] Another message
-[error] [2024-03-24T02:59:39.175477] And another

@@ -14,7 +14,7 @@ from setup import setup
 
 def main():
     
-    # TODO: Add error checking for this initial check incase the file or configs folder does not exist
+    # TODO: Add error checking for this initial check incase the file or configs folder does not exist (likely during initial load)
     with open("./configs/program_config.json", "r") as file:
         config = json.load(file)
         if config["successfull_configuration"] != "true":
@@ -37,7 +37,7 @@ def main():
 """), title="Instructions", style="bold red", title_align="left")
 
 )
-    # TODO: Add option to mass install profiles from a specified folder
+    # TODO: Add option to mass install profiles from a specified folder (future feature)
 
     input = typer.prompt("Action")
 

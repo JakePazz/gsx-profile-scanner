@@ -23,7 +23,7 @@ def search(target: str) -> int | None:
 
 def settings():
     # Access settings from the program_config.json file and scan_config.json file
-
+    
     pass
 
 def help():
