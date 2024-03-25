@@ -22,11 +22,8 @@ The {severity} of message: 'info', 'error', 'warn'
             log_file.write(f"\n{prefix(severity)} {message.strip()}")
 
 def retrieve_path():
-    # Retrieve path of GSX profiles folder
+    # Retrieve path of GSX profiles folder - only for user AFTER SETUP
     # TODO: Add validation
     with open("./configs/scan_config.json","r") as scan_config_file:
         scan_config = load(scan_config_file)
         return scan_config["profile_folder_path"]
-    
-
-print(retrieve_path())

@@ -1,0 +1,57 @@
+[info] [2024-03-25T22:04:04.768387] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:04:04.768887] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:05:29.792864] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:05:29.793365] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:06:33.403669] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:06:33.404169] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:06:59.170342] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:06:59.170342] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:08:08.664027] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:08:08.664528] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:09:08.080969] Invalid input (did not match required 'recommended', 'all' or 'custom')
+[info] [2024-03-25T22:09:54.475901] Invalid input (did not match required 'recommended', 'all' or 'custom')
+[info] [2024-03-25T22:09:57.350089] Invalid input (did not match required 'recommended', 'all' or 'custom')
+[info] [2024-03-25T22:10:31.365575] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:10:31.365575] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:10:38.316090] User selected recommended as the display data choice
+[error] [2024-03-25T22:10:38.316590] Error writing   scan config to file with error: dump() missing 1 required positional argument: 'fp'
+[info] [2024-03-25T22:17:02.561801] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:17:02.562301] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:17:05.405667] User selected recommended as the display data choice
+[info] [2024-03-25T22:17:05.406668] Scan config created successfully
+[info] [2024-03-25T22:17:05.407169] Successfully wrote to program_config file
+[info] [2024-03-25T22:17:51.502045] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:17:51.502546] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:17:52.899789] User selected all as the display data choice
+[info] [2024-03-25T22:17:52.901290] Scan config created successfully
+[info] [2024-03-25T22:17:52.901791] Successfully wrote to program_config file
+[info] [2024-03-25T22:18:04.914600] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:18:04.915100] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:18:06.990848] User selected custom as the display data choice
+[info] [2024-03-25T22:18:43.684934] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:18:43.685434] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:18:45.711575] User selected custom as the display data choice
+[info] [2024-03-25T22:20:28.664966] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:20:28.665466] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:20:30.937552] User selected custom as the display data choice
+[info] [2024-03-25T22:21:46.350055] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:21:46.350555] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:21:48.270697] User selected custom as the display data choice
+[info] [2024-03-25T22:35:14.354634] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:35:14.355135] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:35:16.380222] User selected custom as the display data choice
+[info] [2024-03-25T22:35:41.765638] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:35:41.766139] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:35:43.648531] User selected custom as the display data choice
+[info] [2024-03-25T22:36:06.407291] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:36:06.407792] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:36:08.209515] User selected custom as the display data choice
+[info] [2024-03-25T22:36:11.806957] User selected ['1', ' 3', ' 10'] as the display data values
+[info] [2024-03-25T22:36:11.807958] Scan config created successfully
+[info] [2024-03-25T22:36:11.808458] Successfully wrote to program_config file
+[info] [2024-03-25T22:37:44.236580] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-25T22:37:44.237081] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-25T22:37:46.115081] User selected custom as the display data choice
+[info] [2024-03-25T22:37:57.045538] User selected ['1', '3', '5'] as the display data values
+[info] [2024-03-25T22:37:57.046538] Scan config created successfully
+[info] [2024-03-25T22:37:57.047039] Successfully wrote to program_config file

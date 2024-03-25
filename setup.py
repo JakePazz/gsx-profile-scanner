@@ -4,7 +4,8 @@ import typer
 from rich import print as prnt
 from rich.panel import Panel
 from rich.table import Table
-from json import dump
+from rich import box
+from json import dumps
 
 # Internal imports
 from utils import log
@@ -82,17 +83,16 @@ def setup():
     prnt("When using the 'scan' command you will be shown a list of all found airports corresponding to your profiles. You must now choose what information you wish to be displayed for each airport.")
     prnt("Select what information you would like to be displayed for each airport")
     
-    options_table = Table("Name","Description", "Included Information", style="bold dodger_blue2")
+    options_table = Table("Name","Description", "Included Information", style="dodger_blue2", box=box.HEAVY_EDGE)
     options_table.add_row("Recommended", "The recommended, necessary and useful, information", "ident (ICAO), IATA, name, type (small, large, heli), continent")
     options_table.add_row("All", "All available information (not recommended).", "ident, type, name, latitude, longitude, elevation, continent, iso country, iso region, municipality, scheduled_service, gps_code, iata_code, keywords")
-    options_table.add_row("Custom", "Choose what information you want displayed.", "N/A")
+    options_table.add_row("Custom", "Choose what information you want displayed.", "TBD...")
 
     prnt(options_table)
     prnt("Enter [bold green]'recommended'[/bold green], [bold green]'all'[/bold green] or [bold green]'custom'[/bold green]")
     while True:
-        display_data_choice_input: str = typer.prompt("Choice")
-        input = input.lower()
-        if input not in ["recommended", "all", "custom"]:
+        display_data_choice_input: str = typer.prompt("Choice").lower()
+        if display_data_choice_input not in ["recommended", "all", "custom"]:
             log("info", "Invalid input (did not match required 'recommended', 'all' or 'custom')")
             prnt("[red]Invalid input. Please try again.[/red]")
             continue
@@ -106,7 +106,7 @@ def setup():
         case "all":
             scan_config["scan_display_data"] = ["ident","type","name","latitude","longitude","elevation_ft","continent","iso_country","iso_region","municipality","scheduled_service","gps_code","iata_code","keywords"]
         case "custom":
-            display_data_values_table = Table("No.","Name","Description", "Example")
+            display_data_values_table = Table("No.","Name","Description", "Example", style="dodger_blue1", box=box.HEAVY_EDGE)
             display_data_values_table.add_row("1", "Ident", "ICAO code for the airport", "EGLL")
             display_data_values_table.add_row("2", "Type", "Type of airport", "Large Airport")
             display_data_values_table.add_row("3", "Name", "Name of the airport", "London Heathrow Airport")
@@ -122,19 +122,19 @@ def setup():
             display_data_values_table.add_row("13", "IATA Code", "The IATA code for the airport", "LHR")
             display_data_values_table.add_row("14", "Keywords", "Keywords for the airport (Contents may vary)", "London, Heathrow, EGLL")
             prnt(display_data_values_table)
-            prnt("Enter the numbers of the data values you would like to be displayed separated by commas in the order you wish them to be displayed (e.g. '1,3,5')")
-            display_data_choices: int = typer.prompt().split(",")
+            prnt("Enter the numbers of the data values you would like to be displayed [bold]separated by commas[/bold] in the order you wish them to be displayed (e.g. '1,3,5')")
+            display_data_choices: int = typer.prompt("Selection").split(",")
             scan_config["scan_display_data"] = []
-
             options_list = ["ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", "iso_country", "iso_region", "municipality", "scheduled_service", "gps_code", "iata_code", "keywords"]
             for choice in display_data_choices:
-                scan_config["scan_display_data"].append(display_data_values_table[choice])
+                print(f"Choice: {choice.strip()}")
+                scan_config["scan_display_data"].append(options_list[int(choice)-1])
             log("info",f"User selected {display_data_choices} as the display data values")
 
     # Write the scan config to json file
     try:
         with open("./configs/scan_config.json","w") as scan_config_file:
-            scan_config_file.write(dump(scan_config))
+            scan_config_file.write(dumps(scan_config))
         log("info","Scan config created successfully")
     except Exception as error:
         log("error", f"Error writing scan config to file with error: {error}")
@@ -143,7 +143,8 @@ def setup():
     
     try:
         with open("./configs/program_config.json","w") as program_config_file:
-            program_config_file.write(dump({"successfull_configuration":"true"}))
+            program_config_file.write(dumps({"successfull_configuration":"true"}))
+        log("info","Successfully wrote to program_config file")
     except Exception as error:
         log("error", f"Error writing to program config file with error: {error}")
         prnt("[bold red]Error![/bold red] An error occurred writing to the program config to file. Setup failed.")
@@ -164,5 +165,3 @@ def manual_path_entry():
             log("info","User provided an invalid path (system could not find it)")
             prnt("[red bold]Invalid directory path, try again[/red bold]")
             continue
-
-setup()
