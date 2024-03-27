@@ -6,6 +6,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich import box
 from json import dumps
+from typing import List
 
 # Internal imports
 from utils import log
@@ -46,7 +47,7 @@ def setup():
         prnt("[bold red]Error![/bold red] Your system username could not be retrieved automatically. Enter it yourself below.")
         username = typer.prompt("Enter username")
         
-    profiles_folder_path = f"C:/Users/{username}/AppData/Roaming/virtuali/GSX/MSFS"
+    profiles_folder_path: str = f"C:/Users/{username}/AppData/Roaming/virtuali/GSX/MSFS"
 
     # Check within expected profiles folder path for either a .ini or .py file to verify that this is (likely) the profiles folder
     valid_filetype_found: bool = False
@@ -74,7 +75,7 @@ def setup():
                     continue
         log("Profile path found")
     
-    scan_config = {
+    scan_config: dict = {
             "profile_folder_path": profiles_folder_path
     }
     log("info",f"Scan config created with profile folder path: {profiles_folder_path}")
@@ -125,7 +126,7 @@ def setup():
             prnt("Enter the numbers of the data values you would like to be displayed [bold]separated by commas[/bold] in the order you wish them to be displayed (e.g. '1,3,5')")
             display_data_choices: int = typer.prompt("Selection").split(",")
             scan_config["scan_display_data"] = []
-            options_list = ["ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", "iso_country", "iso_region", "municipality", "scheduled_service", "gps_code", "iata_code", "keywords"]
+            options_list: List[str] = ["ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", "iso_country", "iso_region", "municipality", "scheduled_service", "gps_code", "iata_code", "keywords"]
             for choice in display_data_choices:
                 print(f"Choice: {choice.strip()}")
                 scan_config["scan_display_data"].append(options_list[int(choice)-1])
@@ -165,3 +166,8 @@ def manual_path_entry():
             log("info","User provided an invalid path (system could not find it)")
             prnt("[red bold]Invalid directory path, try again[/red bold]")
             continue
+
+
+
+if __name__ == "__main__":
+    setup()

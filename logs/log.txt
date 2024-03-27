@@ -55,3 +55,9 @@
 [info] [2024-03-25T22:37:57.045538] User selected ['1', '3', '5'] as the display data values
 [info] [2024-03-25T22:37:57.046538] Scan config created successfully
 [info] [2024-03-25T22:37:57.047039] Successfully wrote to program_config file
+[warn] [2024-03-27T19:42:08.421752] 'configs' folder does not exist but is now being created
+[info] [2024-03-27T19:42:08.424250] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-03-27T19:42:08.424250] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-03-27T19:42:11.103399] User selected recommended as the display data choice
+[info] [2024-03-27T19:42:11.104400] Scan config created successfully
+[info] [2024-03-27T19:42:11.105401] Successfully wrote to program_config file

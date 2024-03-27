@@ -13,6 +13,9 @@ import actions as actn
 from setup import setup
 import utils
 
+# TODO: Add option to mass install profiles from a specified folder (future feature)
+# TODO: Add caching to remember past airports, especially ones that the system cannot detect
+# TODO: Add function to open GSX Folder
 
 def main():
     boot()
@@ -31,10 +34,8 @@ def main():
 1. Use the 'commands' box to view all available commands
 2. To run a command, type the trigger word in the input box
 """), title="Instructions", style="bold red", title_align="left")
-
 )
-    # TODO: Add option to mass install profiles from a specified folder (future feature)
-
+    
     input = typer.prompt("Action")
 
     if input == "scan":
