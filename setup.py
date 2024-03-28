@@ -9,16 +9,17 @@ from json import dumps
 from typing import List
 
 # Internal imports
-from utils import log
+from utils import log, print_line
 
 def setup():
-    scan_config: dict = {} # The config that will be written to the scan_config json file once setup is complete
+    # The configs that will be written to the json files once setup is complete
+    scan_config: dict = {}
+    program_config: dict = {}
 
-    prnt("[bold blue]GSX Pro Profile Scanner setup[/bold blue]\nThis will setup all configs so that you should [italic]never[/italic] have to touch them again (maybe).")
+    prnt("[bold blue]GSX Pro Profile Scanner setup[/bold blue]\nThis will setup all configs for the program to function how you want it to.")
     prnt("Enter [bold green]'continue'[/bold green] or type [bold red]'cancel'[/bold red] to stop setup.")
     while True:
-        input: str = typer.prompt("Action")
-        input = input.lower()
+        input: str = typer.prompt("Action").lower()
         if input not in ["continue", "cancel"]:
             log("info", "Invalid input (did not match required 'continue' or 'cancel')")
             prnt("[red]Invalid input. Please try again.[/red]")
@@ -35,6 +36,7 @@ def setup():
     if not os.path.exists("./configs"):
         log("warn","'configs' folder does not exist but is now being created")
         os.mkdir("./configs")
+        log("info","Configs folder created")
         
     
 
@@ -53,8 +55,7 @@ def setup():
     valid_filetype_found: bool = False
     with os.scandir(profiles_folder_path) as profiles_folder:
         for file in profiles_folder:
-            if file.is_file():
-                if file.name.endswith(".ini") or file.name.endswith(".py"):
+                if file.is_file() and (file.name.endswith(".ini") or file.name.endswith(".py")):
                     log("info",f"Valid filetype found within the specified path of ({profiles_folder_path})")
                     valid_filetype_found = True
                     break
@@ -81,9 +82,9 @@ def setup():
     log("info",f"Scan config created with profile folder path: {profiles_folder_path}")
     
     # Get user to decide on what data they want to be shown when using 'scan' command
-    prnt("When using the 'scan' command you will be shown a list of all found airports corresponding to your profiles. You must now choose what information you wish to be displayed for each airport.")
-    prnt("Select what information you would like to be displayed for each airport")
-    
+    print_line()
+    prnt("When using the 'scan' command you will be shown a list of all airports found, corresponding to your installed profiles. You must now choose what information you wish to be displayed for each airport.")
+
     options_table = Table("Name","Description", "Included Information", style="dodger_blue2", box=box.HEAVY_EDGE)
     options_table.add_row("Recommended", "The recommended, necessary and useful, information", "ident (ICAO), IATA, name, type (small, large, heli), continent")
     options_table.add_row("All", "All available information (not recommended).", "ident, type, name, latitude, longitude, elevation, continent, iso country, iso region, municipality, scheduled_service, gps_code, iata_code, keywords")
@@ -92,7 +93,7 @@ def setup():
     prnt(options_table)
     prnt("Enter [bold green]'recommended'[/bold green], [bold green]'all'[/bold green] or [bold green]'custom'[/bold green]")
     while True:
-        display_data_choice_input: str = typer.prompt("Choice").lower()
+        display_data_choice_input: str = typer.prompt("Action").lower()
         if display_data_choice_input not in ["recommended", "all", "custom"]:
             log("info", "Invalid input (did not match required 'recommended', 'all' or 'custom')")
             prnt("[red]Invalid input. Please try again.[/red]")
@@ -125,12 +126,43 @@ def setup():
             prnt(display_data_values_table)
             prnt("Enter the numbers of the data values you would like to be displayed [bold]separated by commas[/bold] in the order you wish them to be displayed (e.g. '1,3,5')")
             display_data_choices: int = typer.prompt("Selection").split(",")
+            # TODO: Validate that each value entered has a corresponding option
             scan_config["scan_display_data"] = []
             options_list: List[str] = ["ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", "iso_country", "iso_region", "municipality", "scheduled_service", "gps_code", "iata_code", "keywords"]
             for choice in display_data_choices:
                 print(f"Choice: {choice.strip()}")
                 scan_config["scan_display_data"].append(options_list[int(choice)-1])
             log("info",f"User selected {display_data_choices} as the display data values")
+
+    # Get user to decide on what file extensions will be recognised as profiles
+    print_line()
+    prnt("Enter [green]'continue'[/green] to proceed with default profile file extensions of [blue]'.ini'[/blue] and [blue]'.py'[/blue] files or [green]'custom'[/green] to select file extensions")
+    while True:
+        extension_decision_input: str = typer.prompt("Action").lower()
+        if extension_decision_input not in ["continue", "custom"]:
+            log("info", "Invalid input (did not match required 'continue' or 'update)")
+            prnt("[red]Invalid input. Please try again.[/red]")
+            continue
+        else:
+            log("info",f"User selected {extension_decision_input} as file extensions decision")
+            break
+    
+    match extension_decision_input:
+        case "continue":
+            scan_config["recognised_profile_extensions"] = [
+                "ini",
+                "py"
+            ]
+            log("info", "User chose to use default file extensions of .ini and .py")
+        case "custom":
+            prnt("Manually enter a list of file extensions you want to be recognised as profiles; [bold]separated by commas[/bold] (e.g. 'ini,py,txt')")
+            prnt("[yellow]Note: Do not include the '.' before the extension and no default extensions (ini, py) are included with a custom configuration[/yellow]")
+            recognised_extensions: List[str] = typer.prompt("Extensions").split(",")
+            print(f"[italic green]Accepted extensions: {recognised_extensions}[/italic green]")
+            # TODO: Add any validation possible
+            program_config["recognised_profile_extensions"] = recognised_extensions
+            log("info", f"User chose have a custom set of extensions as below: {recognised_extensions}")
+
 
     # Write the scan config to json file
     try:
@@ -142,19 +174,24 @@ def setup():
         prnt("[bold red]Error![/bold red] An error occurred writing the scan config to file. Setup failed.")
         raise typer.Exit()
     
+    program_config["successful_configuration"] = True
+
     try:
         with open("./configs/program_config.json","w") as program_config_file:
-            program_config_file.write(dumps({"successfull_configuration":"true"}))
+            program_config_file.write(dumps(program_config))
         log("info","Successfully wrote to program_config file")
     except Exception as error:
         log("error", f"Error writing to program config file with error: {error}")
         prnt("[bold red]Error![/bold red] An error occurred writing to the program config to file. Setup failed.")
         raise typer.Exit()
     
+    
+    
 
 
 def manual_path_entry():
     # Allow user to manually enter the path of their GSX Profile folder
+    print_line()
     prnt("The system is unable to identify your GSX Pro Profile Path. Please enter it manually below")
     while True:
         path_input = typer.prompt("Profile Folder Path")
@@ -171,3 +208,4 @@ def manual_path_entry():
 
 if __name__ == "__main__":
     setup()
+    

@@ -2,6 +2,7 @@ def scan():
     import os
     from utils import retrieve_path
     from typing import List
+
     # Scan the specified profiles folder for GSX profiles using search() and display the results to the user
 
     # - Get list of filenames
@@ -16,7 +17,10 @@ def scan():
 
     for profile in profiles:
         extension = profile.split(".")[-1]
-        print(extension)
+        if extension == "ini" or extension == "py": # TODO: Switch to get file extensions from config
+            pass
+
+        
     
     
 

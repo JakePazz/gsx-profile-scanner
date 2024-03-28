@@ -16,6 +16,9 @@ import utils
 # TODO: Add option to mass install profiles from a specified folder (future feature)
 # TODO: Add caching to remember past airports, especially ones that the system cannot detect
 # TODO: Add function to open GSX Folder
+# TODO: Add manual data file input (from same source, but to be able to update it etc.)
+# TODO: Add auto data request
+# TODO: Change prnt to something else less ambiguous
 
 def main():
     boot()
