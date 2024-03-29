@@ -107,3 +107,12 @@
 [info] [2024-03-28T01:35:57.459130] User selected custom as file extensions decision
 [info] [2024-03-28T01:36:03.082098] Scan config created successfully
 [info] [2024-03-28T01:36:03.083099] Successfully wrote to program_config file
+[warn] [2024-03-29T21:43:35.726132] retrieve_config() failed to retrieve config_item (scan_display_data) from file (scan_config) with error: [Errno 2] No such file or directory: './configs/scan_config'
+[warn] [2024-03-29T21:44:13.394846] retrieve_config() failed to retrieve config_item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>) with error: argument should be integer or None, not 'dict'
+[warn] [2024-03-29T21:45:09.072823] retrieve_config() failed to retrieve config_item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>) with error: argument should be integer or None, not 'dict'
+[warn] [2024-03-29T21:45:19.658489] retrieve_config() failed to retrieve config_item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>) with error: argument should be integer or None, not 'dict'
+[warn] [2024-03-29T21:47:09.686269] retrieve_config() failed to retrieve config_item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>) with error: argument should be integer or None, not 'dict'
+[warn] [2024-03-29T21:50:14.160733] retrieve_config() failed to retrieve config_item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>) with error: argument should be integer or None, not 'dict'
+[info] [2024-03-29T21:51:50.779322] Successfully retrieved item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>)
+[info] [2024-03-29T21:52:03.660365] Successfully retrieved item (scan_display_data) from file (<_io.TextIOWrapper name='./configs/scan_config.json' mode='r' encoding='cp1252'>)
+[info] [2024-03-29T21:56:11.399782] Successfully retrieved item (recognised_profile_extensions) from file (program_config)

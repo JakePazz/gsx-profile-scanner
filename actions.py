@@ -17,6 +17,7 @@ def scan():
 
     for profile in profiles:
         extension = profile.split(".")[-1]
+        
         if extension == "ini" or extension == "py": # TODO: Switch to get file extensions from config
             pass
 
