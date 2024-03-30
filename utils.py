@@ -5,7 +5,7 @@ def prefix(severity: str) -> str:
     from datetime import datetime
     return f"[{severity}] [{datetime.isoformat(datetime.now())}]"
 
-def log(severity: str, message: str) -> None:
+def log(severity: str, message: str, log_file: str = "log") -> None:
     """
 What {message} to send to log: string
 The {severity} of message: 'info', 'error', 'warn'
@@ -14,7 +14,7 @@ The {severity} of message: 'info', 'error', 'warn'
     if not path.exists("./logs"):
         mkdir("./logs")
         
-    with open(f"./logs/log.txt", "a") as log_file:
+    with open(f"./logs/{log_file}.txt", "a") as log_file:
 
         if severity not in ['info', 'error', 'warn']:
             log_file.write(f"\n{prefix("UNKNOWN")} {message.strip()}")
@@ -40,10 +40,10 @@ def open_profile_folder() -> None:
     startfile(retrieve_path())
 
 def print_line() -> None:
-    from rich import print as prnt
+    from rich import print as rich_print
     from rich.markdown import Markdown
     try:
-        prnt(Markdown("---"))
+        rich_print(Markdown("---"))
     except Exception as error:
         log("warn", f"Failed to print_line() with error: {error}")
 
@@ -52,14 +52,16 @@ def retrieve_config(config_file: str, config_item: str):
     from json import load
     try:
         with open(f"./configs/{config_file}.json", "r") as file:
-            config_data = load(file)
+            config_data: dict = load(file)
         log("info",f"Successfully retrieved item ({config_item}) from file ({config_file})")
     except Exception as error:
         log("warn", f"retrieve_config() failed to retrieve config_item ({config_item}) from file ({config_file}) with error: {error}")
         return False
     return config_data[config_item]
+    # TODO: Add in error checking for the final return
 
 if __name__ == "__main__":
-    pass
+    open_profile_folder()
+    print(retrieve_config("program_config", "recognised_profile_name_split_types"))
 
 
