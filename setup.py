@@ -76,6 +76,7 @@ def setup():
                     continue
         log("Profile path found")
     
+    # TODO: Show user tree of the folder (rich thing) and then ask for confirmation that path is correct - if not start again
     scan_config: dict = {
             "profile_folder_path": profiles_folder_path
     }
@@ -85,7 +86,7 @@ def setup():
     print_line()
     rich_print("When using the 'scan' command you will be shown a list of all airports found, corresponding to your installed profiles. You must now choose what information you wish to be displayed for each airport.")
 
-    options_table = Table("Name","Description", "Included Information", style="dodger_blue2", box=box.HEAVY_EDGE)
+    options_table = Table("Name","Description", "Included Information", style="dodger_blue2", box=box.HEAVY_EDGE, expand=True)
     options_table.add_row("Recommended", "The recommended, necessary and useful, information", "ident (ICAO), IATA, name, type (small, large, heli), continent")
     options_table.add_row("All", "All available information (not recommended).", "ident, type, name, latitude, longitude, elevation, continent, iso country, iso region, municipality, scheduled_service, gps_code, iata_code, keywords")
     options_table.add_row("Custom", "Choose what information you want displayed.", "TBD...")
@@ -104,11 +105,11 @@ def setup():
     
     match display_data_choice_input:
         case "recommended":
-            scan_config["scan_display_data"] = ["ident","iata","name","type","continent"]
+            scan_config["scan_display_data"] = ["ident","iata_code","name","type","continent"]
         case "all":
             scan_config["scan_display_data"] = ["ident","type","name","latitude","longitude","elevation_ft","continent","iso_country","iso_region","municipality","scheduled_service","gps_code","iata_code","keywords"]
         case "custom":
-            display_data_values_table = Table("No.","Name","Description", "Example", style="dodger_blue1", box=box.HEAVY_EDGE)
+            display_data_values_table = Table("No.","Name","Description", "Example", style="dodger_blue1", box=box.HEAVY_EDGE, expand=True)
             display_data_values_table.add_row("1", "Ident", "ICAO code for the airport", "EGLL")
             display_data_values_table.add_row("2", "Type", "Type of airport", "Large Airport")
             display_data_values_table.add_row("3", "Name", "Name of the airport", "London Heathrow Airport")
@@ -195,7 +196,7 @@ def setup():
     # TODO: Test custom system with confirmation
 
     print_line()
-    rich_print("Profile filename split types set to '-' and '_' as default (can be changed later in settings)")
+    rich_print("[italic yellow]Note: Profile filename split types set to '-' and '_' as default (can be changed later in settings)[/italic yellow]")
     scan_config["recognised_profile_name_split_types"] = [
         "-",
         "_"
@@ -222,6 +223,8 @@ def setup():
         log("error", f"Error writing to program config file with error: {error}")
         rich_print("[bold red]Error![/bold red] An error occurred writing to the program config to file. Setup failed.")
         raise typer.Exit()
+    
+    rich_print("[green bold]Setup compelete![/green bold]")
     
     
     

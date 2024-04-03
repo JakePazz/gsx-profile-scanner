@@ -1,5 +1,3 @@
-# Use a class here for sessionlog (so timestamp can be got in __init__ and then be used for getting file loc when needed)
-
 
 def prefix(severity: str) -> str:
     from datetime import datetime

@@ -2,7 +2,7 @@
   "profile_folder_path": "C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS",
   "scan_display_data": [
     "ident",
-    "iata",
+    "iata_code",
     "name",
     "type",
     "continent"
