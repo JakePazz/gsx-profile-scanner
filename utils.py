@@ -26,8 +26,8 @@ def retrieve_path() -> None:
     from json import load
     from rich import print as rich_print
     from typer import Exit
-    # Retrieve path of GSX profiles folder - only for user AFTER SETUP
-    # TODO: Add validation
+
+    # Retrieve path of GSX profiles folder (only for user after setup)
     try:
         with open("./configs/scan_config.json","r") as scan_config_file:
             scan_config = load(scan_config_file)
@@ -113,8 +113,3 @@ def yes_or_no() -> bool:
 
 if __name__ == "__main__":
     pass
-
-    
-            
-
-    

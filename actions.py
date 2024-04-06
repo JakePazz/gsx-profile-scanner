@@ -121,8 +121,22 @@ def search(target: str, type: str) -> int | None:
 
 def settings():
     # Access settings from the program_config.json file and scan_config.json file
+    """
+- Ask user which config they want to see and change
+- Display available configs and current state; load from the object (get input rules based off if it is an array or not)
+- Ask and get what setting user wants to change
+- Apply change
+- Store in configs_audit.txt
+    """
+
+    # with open("./configs/program_config.json", "r") as program_config_file:
+    #     program_config = json.load(program_config_file)
+        
+
+    # with open("./configs/scan_config.json", "r") as scan_config_file:
+    #     scan_config = json.load(scan_config_file)
+        
     
-    pass
 
 def help():
     from utils import print_line
@@ -169,4 +183,5 @@ def help():
 
 if __name__ == "__main__":
     # scan()
-    help()
+    # help()
+    settings()
