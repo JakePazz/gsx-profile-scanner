@@ -9,7 +9,7 @@ from json import dumps
 from typing import List
 
 # Internal imports
-from utils import log, print_line
+from utils import log, print_line, print_profiles_folder
 
 def setup():
     # The configs that will be written to the json files once setup is complete
@@ -32,14 +32,11 @@ def setup():
         rich_print("Setup cancelled.")
         raise typer.Exit()
 
-
     if not os.path.exists("./configs"):
         log("warn","'configs' folder does not exist but is now being created")
         os.mkdir("./configs")
         log("info","Configs folder created")
         
-    
-
     # if system username not found, get user to manually enter it
     username: str
     try:
@@ -61,22 +58,10 @@ def setup():
                     break
     if not valid_filetype_found:
         rich_print("[bold dark_orange]Could not find a valid .ini or .py file within the expected profiles folder[/bold dark_orange]")
-        rich_print(f"Confirm the following path '{profiles_folder_path}' is correct")
         rich_print("[italic]Note: This error will occur if your profiles folder is empty yet valid; if this is the case respond with 'y'[/italic]")
-        while True:
-            decision_input: str = typer.prompt("y/n").lower()[0]
-            match decision_input:
-                case "y":
-                    break
-                case "n":
-                    profiles_folder_path = manual_path_entry()
-                    break
-                case _:
-                    rich_print("[bold dark_orange]Invalid input, try again[/bold orange]")
-                    continue
-        log("Profile path found")
-    
-    # TODO: Show user tree of the folder (rich thing) and then ask for confirmation that path is correct - if not start again
+        if confirm_path() == True:
+            profiles_folder_path = manual_path_entry()
+
     scan_config: dict = {
             "profile_folder_path": profiles_folder_path
     }
@@ -126,10 +111,20 @@ def setup():
             display_data_values_table.add_row("14", "Keywords", "Keywords for the airport (Contents may vary)", "London, Heathrow, EGLL")
             rich_print(display_data_values_table)
             rich_print("Enter the numbers of the data values you would like to be displayed [bold]separated by commas[/bold] in the order you wish them to be displayed (e.g. '1,3,5')")
-            display_data_choices: int = typer.prompt("Selection").split(",")
-            # TODO: Validate that each value entered has a corresponding option
-            scan_config["scan_display_data"] = []
             options_list: List[str] = ["ident", "type", "name", "latitude_deg", "longitude_deg", "elevation_ft", "continent", "iso_country", "iso_region", "municipality", "scheduled_service", "gps_code", "iata_code", "keywords"]
+
+            while True:
+                display_data_choices: int = typer.prompt("Selection").split(",").strip()
+                if all(ele in options_list for ele in display_data_choices):
+                    log("info", "Display data choices valid")
+                    break
+                else:
+                    print("Invalid entry, try again.")
+                    log("warn", "User entered invalid options ")
+                    continue
+
+            scan_config["scan_display_data"] = []
+            
             for choice in display_data_choices:
                 print(f"Choice: {choice.strip()}")
                 scan_config["scan_display_data"].append(options_list[int(choice)-1])
@@ -159,11 +154,25 @@ def setup():
             while True:
                 rich_print("Manually enter a list of file extensions you want to be recognised as profiles; [bold]separated by commas[/bold] (e.g. 'ini,py,txt')")
                 rich_print("[yellow]Note: Do not include the '.' before the extension and no default extensions (ini, py) are included with a custom configuration[/yellow]")
-                recognised_extensions: List[str] = typer.prompt("Extensions").split(",")
+                recognised_extensions: List[str] = typer.prompt("Extensions").split(",").strip()
                 print(f"[italic green]Accepted extensions: {recognised_extensions}[/italic green]")
-                # TODO: Add any validation possible
-                rich_print("[yellow]Are you sure wish to continue with the specified extensions above?")
-                rich_print("Enter [green]'contin")
+                
+                rich_print("[yellow]Are you sure wish to continue with the specified extensions:?")
+                for extension in recognised_extensions:
+                    print(f"\n- {extension.lower()}")
+                rich_print("Enter [green]'continue' if yes, or 'restart' to enter your choices again")
+                while True:
+                    continue_decision = typer.prompt("Action")
+                    if continue_decision not in ["continue", "restart"]:
+                        rich_print("[red]Invalid input. Please try again.[/red]")
+                        log("error", "User entered incorrect decision for continuing/restarting custom file extensions")
+                        continue
+                    else:
+                        log("info", "User accepted their file extensions custom choices")
+                        break
+                if continue_decision == "restart":
+                    print_line()
+                    continue
 
                 print_line()
                 rich_print("[bold]Custom extensions:[/bold]")
@@ -193,7 +202,6 @@ def setup():
                             "ini",
                             "py"
                         ]
-    # TODO: Test custom system with confirmation
 
     print_line()
     rich_print("[italic yellow]Note: Profile filename split types set to '-' and '_' as default (can be changed later in settings)[/italic yellow]")
@@ -202,8 +210,7 @@ def setup():
         "_"
     ]
 
-
-    # Write the scan config to json file
+    # Write the scan and program configs to json files
     try:
         with open("./configs/scan_config.json","w") as scan_config_file:
             scan_config_file.write(dumps(scan_config))
@@ -226,9 +233,6 @@ def setup():
     
     rich_print("[green bold]Setup compelete![/green bold]")
     
-    
-    
-
 
 def manual_path_entry():
     # Allow user to manually enter the path of their GSX Profile folder
@@ -245,6 +249,22 @@ def manual_path_entry():
             rich_print("[red bold]Invalid directory path, try again[/red bold]")
             continue
 
+
+def confirm_path(profiles_folder_path):
+    
+    print_profiles_folder(profiles_folder_path=profiles_folder_path)
+
+    rich_print(f"Confirm the following path '{profiles_folder_path}' is correct")
+    while True:
+        decision_input: str = typer.prompt("y/n").lower()[0]
+        match decision_input:
+            case "y":
+                return True
+            case "n":
+                return False
+            case _:
+                rich_print("[red]Invalid input, try again[/red]")
+                continue
 
 
 if __name__ == "__main__":

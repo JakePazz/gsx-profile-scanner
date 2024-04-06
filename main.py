@@ -19,44 +19,45 @@ import utils
 
 def main():
     boot()
+    # Display menu and accept user input for command choice and execute
+    # While loop will mean menu is show again once current action is complete
+    while True:
+        commands_table = Table("Command", "Trigger", "Description", style="bold yellow")
+        commands_table.add_row("Scan Folder","scan", "Scan the specified profiles folder for GSX profiles")
+        commands_table.add_row("Open Folder", "open", "Open the GSX Pro Profiles folder in file explorer")
+        commands_table.add_row("Settings","settings", "View and edit the settings for this program")
+        commands_table.add_row("Help","help", "View the help menu")
+        commands_table.add_row("Exit","exit", "Exit the program")
 
-    commands_table = Table("Command", "Trigger", "Description", style="bold yellow")
-    commands_table.add_row("Scan Folder","scan", "Scan the specified profiles folder for GSX profiles")
-    commands_table.add_row("Open Folder", "open", "Open the GSX Pro Profiles folder in file explorer")
-    commands_table.add_row("Settings","settings", "View and edit the settings for this program")
-    commands_table.add_row("Help","help", "View the help menu")
-    commands_table.add_row("Exit","exit", "Exit the program")
-
-    rich_print(
-        Panel(Markdown("# GSX Pro Profile Scanner"), title="Welcome", style="bold green"),
-        Panel(commands_table, title="Commands", style="bold yellow", title_align="left"),
-        Panel(Markdown(
-"""
-1. Use the 'commands' box to view all available commands
-2. To run a command, type the trigger word in the input box
-"""), title="Instructions", style="bold red", title_align="left")
-)
-    
-    continue_decision: str = typer.prompt("Action")
-    match continue_decision:
-        case "scan":
-            actn.scan()
-            main()
-        case "open":
-            utils.open_profile_folder()
-        case "settings":
-            actn.settings()
-            main()
-        case "help":
-            actn.help()
-            main()
-        case "exit":
-            rich_print("[red]Goodbye![/red]")
-            raise typer.Exit()
+        rich_print(
+            Panel(Markdown("# GSX Pro Profile Scanner"), title="Welcome", style="bold green"),
+            Panel(commands_table, title="Commands", style="bold yellow", title_align="left"),
+            Panel(Markdown(
+    """
+    1. Use the 'commands' box to view all available commands
+    2. To run a command, type the trigger word in the input box
+    """), title="Instructions", style="bold red", title_align="left")
+    )
+        
+        continue_decision: str = typer.prompt("Action")
+        match continue_decision:
+            case "scan":
+                actn.scan()
+                main()
+            case "open":
+                utils.open_profile_folder()
+            case "settings":
+                actn.settings()
+                main()
+            case "help":
+                actn.help()
+                main()
+            case "exit":
+                rich_print("[red]Goodbye![/red]")
+                raise typer.Exit()
 
 def boot() -> None:
-    # Check if setup is required
-    # TODO: Add error checking for this initial check incase the file or configs folder does not exist (likely during initial load)
+    # Check if setup is required by confirming folders and successful_configuration == True
 
     if not path.exists("./configs"):
         rich_print(Panel("[bright_yellow]Invalid installation found (no configs folder), launching setup[/bright_yellow]", title="Critical Error", style="bold orange1", title_align="left"))
@@ -70,10 +71,14 @@ def boot() -> None:
         rich_print(Panel("[bright_yellow]Invalid installation found (no logs folder), launching setup[/bright_yellow]", title="Critical Error", style="bold orange1", title_align="left"))
         setup()
 
-    with open("./configs/program_config.json", "r") as file:
-        config: dict = json.load(file)
-        if config["successfull_configuration"] != True:
-            rich_print(Panel("[]"))
-            setup()
+    if path.exists("./configs/program_config.json"):
+        with open("./configs/program_config.json", "r") as file:
+            config: dict = json.load(file)
+            if config["successful_configuration"] != True:
+                rich_print(Panel("[]"))
+                setup()
+    else:
+        rich_print(Panel("[bright_yellow]Invalid installation found (no program_config), launching setup[/bright_yellow]", title="Critical Error", style="bold orange1", title_align="left"))
+        setup()
 
 typer.run(main)

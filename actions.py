@@ -28,7 +28,7 @@ def scan():
 
     for file in profile_files:
         if file["valid"] == True:
-            for split_type in retrieve_config("scan_config", "recognised_profile_name_split_types"): # TODO: Add to config
+            for split_type in retrieve_config("scan_config", "recognised_profile_name_split_types"):
                 filename_parts: List[str] = file["filename"].split(split_type)
                 for part in filename_parts:
                     if len(part) == 4:
@@ -48,7 +48,7 @@ def scan():
             if "airport_index" not in file.keys():
                 file["valid"] = False
                 file["invalid_reason"] = "no_code_found"
-                # This is where a overrides.json 
+                # This is where a overrides.json can be added to
 
     for file_index, file in enumerate(profile_files):
         for comparison_index, comparison_file in enumerate(profile_files):
@@ -81,46 +81,24 @@ def scan():
             for preference in display_preference:
                 current_airport.append(str(airport_info[preference]))
             
-            
-            # Give this a tuple of all wanted data
             table_data.append(tuple(current_airport))
         else:
             # TODO: Add it to erroneous table w/reasons for break (cannot display info because not all may have it
-            pass
-
+            invalid_data.append(tuple(profile["filename"], profile["extension"], profile["invalid_reason"]))
 
     for row in table_data:
         scan_results_table.add_row(*row)
 
-    # TODO: Once erroneous table created, if it exists then ask user if they want to review invalid filenames w/reasons then give option to manually enter icao or iata and then store in new data file with filename and corresponding icao and then check if file exists here if no airport can be found (Should also allow this for main data values incase it got it wrong)
+    erroneous_results_table = Table("Filename", "Extension", "Invalid Reason", box=box.HEAVY_EDGE, expand=True, style="gold1")
+    
+    for row in invalid_data:
+        erroneous_results_table.add_row(*row)
 
+    # TODO: Once erroneous table created, if it exists then ask user if they want to review invalid filenames w/reasons then give option to manually enter icao or iata and then store in new data file with filename and corresponding icao and then check if file exists here if no airport can be found (Should also allow this for main data values incase it got it wrong)
 
     rich_print(scan_results_table)
 
-
-
-
-
-
-
-
-
-
-
-"""
-DONE - check through each valid_files and split by - and if successful move on, then split by _ MAKE IT A FUNCTION
-DONE - Check each section of each file and see if it is len(4) then search for it in data
-DONE - If found add index to dictionary as an airport_index
-DONE - Check for duplicates by comparing airport_indexs and if found store this and output to user (add valid = False attribute with reason being duplicate and then display at end)
-- Output to user (inc. any invalid_files and any unidentified or duplicate files)
-    - Set headers using new_columns
-    - Set rows by looping through each object
-
-
-- Allow user to update data for a file manually (including found airport files incase it was misidentified) and then save this in a json file in ./data to be scanned before outputting any other time for any matches to then replace existing info with what is in the file
-
-
-"""
+# TODO: Allow user to update data for a file manually (including found airport files incase it was misidentified) and then save this in a json file in ./data to be scanned before outputting any other time for any matches to then replace existing info with what is in the file
 
 
 def search(target: str, type: str) -> int | None:
@@ -147,19 +125,48 @@ def settings():
     pass
 
 def help():
-    # Display some help information to the user - how to use the program, what commands are available, etc.
+    from utils import print_line
+    from rich import print as rich_print
+    from typer import prompt
+    from webbrowser import open
 
-    pass
+    print_line()
+    rich_print("[bold green]Help[/bold green]")
+    rich_print("Help can be found on an external website.\nTo access it you can: go 'direct' to the webpage, 'copy' to clipboard, 'display' url")
+
+    while True:
+        HELP_PAGE_URL = "todo:putthehelpurlhere.com"
+        help_decision = prompt("Action").lower().strip()
+
+        match help_decision:
+            case "direct":
+                from webbrowser import open
+                try:
+                    open(HELP_PAGE_URL, autoraise=2)
+                except Exception as error:
+                    rich_print("[orange1]Cannot send you directly to the webpage. Instead view the url below[/orange1]")
+                    rich_print(f"Find help at '{HELP_PAGE_URL}'")
+                    input("Press enter to continue...")
+                break
+            case "copy":
+                from pyclip import copy
+                try:
+                    copy(HELP_PAGE_URL)
+                except Exception as error:
+                    rich_print("[orange1]Cannot send you directly to the webpage. Instead view the url below[/orange1]")
+                    rich_print(f"Find help at '{HELP_PAGE_URL}'")
+                    input("Press enter to continue...")
+                break
+            case "display":
+                rich_print(f"Find help at '{HELP_PAGE_URL}'")
+                input("Press enter to continue...")
+                break
+            case _:
+                rich_print("[red]Invalid input, try again[/red]")
+                continue
 
 
 
 if __name__ == "__main__":
-    scan()
-    # from rich.table import Table
-    # from rich import box
-    # from rich import print as rich_print
-    # options_table = Table("Name","Description", "Included Information", style="dodger_blue2", box=box.HEAVY_EDGE, expand=True)
-    # options_table.add_row("Recommended", "The recommended, necessary and useful, information", "ident (ICAO), IATA, name, type (small, large, heli), continent")
-    # options_table.add_row("All", "All available information (not recommended).", "ident, type, name, latitude, longitude, elevation, continent, iso country, iso region, municipality, scheduled_service, gps_code, iata_code, keywords")
-    # options_table.add_row("Custom", "Choose what information you want displayed.", "TBD...")
-    # rich_print(options_table)
+    # scan()
+    help()

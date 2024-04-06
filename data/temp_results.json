@@ -1,1 +1,159 @@
-[{"filename": "edlw-3zy3qw", "valid": true, "extension": "ini", "airport_index": 22572, "ident-found": "icao"}, {"filename": "EFHK-Epixeri", "valid": true, "extension": "ini", "airport_index": 22889, "ident-found": "icao"}, {"filename": "eghe-FGHSS", "valid": true, "extension": "ini", "airport_index": 23151, "ident-found": "icao"}, {"filename": "eghe-FGHSS", "valid": false, "extension": "py", "airport_index": 23151, "ident-found": "icao", "invalid_reason": "duplicate"}, {"filename": "eghi-inibuilds", "valid": true, "extension": "ini", "airport_index": 23155, "ident-found": "icao"}, {"filename": "EGKK-MKVY-A320", "valid": true, "extension": "ini", "airport_index": 23177, "ident-found": "icao"}, {"filename": "egll-iniBuilds-rwprofiles-0lliejs-LITE", "valid": true, "extension": "ini", "airport_index": 23188, "ident-found": "icao"}, {"filename": "egll-iniBuilds-rwprofiles-0lliejs", "valid": false, "extension": "py", "airport_index": 23188, "ident-found": "icao", "invalid_reason": "duplicate"}, {"filename": "egph-xu9pgx", "valid": true, "extension": "ini", "airport_index": 23240, "ident-found": "icao"}, {"filename": "ekvg-FGHSS", "valid": true, "extension": "ini", "airport_index": 23637, "ident-found": "icao"}, {"filename": "ekvg-FGHSS", "valid": false, "extension": "py", "airport_index": 23637, "ident-found": "icao", "invalid_reason": "duplicate"}, {"filename": "ldpl-ppp0si", "valid": true, "extension": "ini", "airport_index": 40888, "ident-found": "icao"}, {"filename": "lfbd-ubxmkw", "valid": true, "extension": "ini", "airport_index": 41113, "ident-found": "icao"}, {"filename": "LFPG-tanxil", "valid": true, "extension": "ini", "airport_index": 41435, "ident-found": "icao"}, {"filename": "liml-fqeddb", "valid": true, "extension": "ini", "airport_index": 41781, "ident-found": "icao"}, {"filename": "ljlj-o7slrf", "valid": true, "extension": "ini", "airport_index": 41845, "ident-found": "icao"}, {"filename": "lpbj-mc22ht", "valid": true, "extension": "ini", "airport_index": 42240, "ident-found": "icao"}, {"filename": "LPMA", "valid": true, "extension": "ini", "airport_index": 42268, "ident-found": "icao"}, {"filename": "LPPR", "valid": true, "extension": "ini", "airport_index": 42289, "ident-found": "icao"}, {"filename": "lxgb-yhwuxh", "valid": true, "extension": "ini", "airport_index": 42769, "ident-found": "icao"}, {"filename": "omdb-QNH997", "valid": true, "extension": "ini", "airport_index": 49742, "ident-found": "icao"}, {"filename": "tbpb-kcokhl", "valid": true, "extension": "ini", "airport_index": 62493, "ident-found": "icao"}]
+[
+  {
+    "filename": "edlw-3zy3qw",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 22572,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "EFHK-Epixeri",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 22889,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "eghe-FGHSS",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 23151,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "eghe-FGHSS",
+    "valid": false,
+    "extension": "py",
+    "airport_index": 23151,
+    "ident-found": "icao",
+    "invalid_reason": "duplicate"
+  },
+  {
+    "filename": "eghi-inibuilds",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 23155,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "EGKK-MKVY-A320",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 23177,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "egll-iniBuilds-rwprofiles-0lliejs-LITE",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 23188,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "egll-iniBuilds-rwprofiles-0lliejs",
+    "valid": false,
+    "extension": "py",
+    "airport_index": 23188,
+    "ident-found": "icao",
+    "invalid_reason": "duplicate"
+  },
+  {
+    "filename": "egph-xu9pgx",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 23240,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "ekvg-FGHSS",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 23637,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "ekvg-FGHSS",
+    "valid": false,
+    "extension": "py",
+    "airport_index": 23637,
+    "ident-found": "icao",
+    "invalid_reason": "duplicate"
+  },
+  {
+    "filename": "ldpl-ppp0si",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 40888,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "lfbd-ubxmkw",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 41113,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "LFPG-tanxil",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 41435,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "liml-fqeddb",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 41781,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "ljlj-o7slrf",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 41845,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "lpbj-mc22ht",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 42240,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "LPMA",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 42268,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "LPPR",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 42289,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "lxgb-yhwuxh",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 42769,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "omdb-QNH997",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 49742,
+    "ident-found": "icao"
+  },
+  {
+    "filename": "tbpb-kcokhl",
+    "valid": true,
+    "extension": "ini",
+    "airport_index": 62493,
+    "ident-found": "icao"
+  }
+]
