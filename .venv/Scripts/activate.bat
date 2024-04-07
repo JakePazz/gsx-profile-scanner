@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\jakep\Documents\GitHub\gsx-profile-scanner\.venv
+set VIRTUAL_ENV=V:\Programming\App Folders\Github Repositories\gsx-profile-scanner\.venv
 
 if not defined PROMPT set PROMPT=$P$G
 
