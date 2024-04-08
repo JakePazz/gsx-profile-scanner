@@ -129,14 +129,68 @@ def settings():
 - Store in configs_audit.txt
     """
 
+    # TODO: Instead allow user to redo setup - but maybe allow them to keep some settings and stop any possible overrides
+
     # with open("./configs/program_config.json", "r") as program_config_file:
     #     program_config = json.load(program_config_file)
         
 
     # with open("./configs/scan_config.json", "r") as scan_config_file:
     #     scan_config = json.load(scan_config_file)
-        
+
+    # from rich import print as rich_print
+    # from rich.table import Table
+    # from rich import box
+
+    # from os import listdir
+    # from typing import List
+    # from typer import prompt
+    # import json
+
+    # rich_print("[bold green]Settings[/bold green]")
+
+    # rich_print("Enter one of the below [green]available configs[/green] using it's name")
+
+    # available_configs: List[str] = listdir("./configs")
+    # for index, config in enumerate(available_configs):
+    #     available_configs[index] = config.split(".")[0].split("_", maxsplit=1)[0]
+    #     rich_print(f"- {available_configs[index]}")
     
+    # while True:
+    #     settings_file_decision: str = prompt("Action").lower().strip()
+    #     if settings_file_decision not in available_configs:
+    #         rich_print("[red]Invalid input, try again[/red]")
+    #         continue
+    #     else:
+    #         break
+
+
+    # with open(f"./configs/{settings_file_decision}_config.json", "r") as config_file:
+    #     config = json.load(config_file)
+    
+    # options_table = Table("Setting","Current Value", box=box.HEAVY_EDGE, expand=True, style="dodger_blue2")
+
+    # for setting in config:
+    #     options_table.add_row(str(setting), str(config[setting]))
+    
+    # rich_print(options_table)
+
+    # rich_print("Enter either the [green]Setting[/green] that you would like to change or [red]'exit'[/red] to return to the menu")
+    # while True:
+    #     selected_setting = prompt("Setting")
+    #     if selected_setting not in config and selected_setting != "exit":
+    #         rich_print("[red]Invalid input, try again[/red]")
+    #         continue
+    #     else:
+    #         break
+    
+    # print(config[selected_setting])
+
+def program_settings_configure():
+    pass
+
+def scan_settings_configure():
+    pass
 
 def help():
     from utils import print_line
@@ -149,7 +203,7 @@ def help():
     rich_print("Help can be found on an external website.\nTo access it you can: go 'direct' to the webpage, 'copy' to clipboard, 'display' url")
 
     while True:
-        HELP_PAGE_URL = "todo:putthehelpurlhere.com"
+        HELP_PAGE_URL = "https://github.com/JakePazz" # TODO: Change to actual help website link
         help_decision = prompt("Action").lower().strip()
 
         match help_decision:
@@ -185,3 +239,4 @@ if __name__ == "__main__":
     # scan()
     # help()
     settings()
+    
