@@ -129,68 +129,102 @@ def settings():
 - Store in configs_audit.txt
     """
 
-    # TODO: Instead allow user to redo setup - but maybe allow them to keep some settings and stop any possible overrides
+    from rich import print as rich_print
+    from rich.table import Table
+    from rich import box
 
-    # with open("./configs/program_config.json", "r") as program_config_file:
-    #     program_config = json.load(program_config_file)
+    from os import listdir
+    from typing import List, Tuple
+    from typer import prompt
+    import json
+
+    from utils import display_data, log
+
+    rich_print("[bold green]Settings[/bold green]")
+
+    rich_print("Enter one of the below [green]available configs[/green] using it's name")
+
+    available_configs: List[str] = listdir("./configs")
+    for index, config in enumerate(available_configs):
+        available_configs[index] = config.split(".")[0].split("_", maxsplit=1)[0]
+        rich_print(f"- {available_configs[index]}")
+    
+    while True:
+        settings_file_decision: str = prompt("Action").lower().strip()
+        if settings_file_decision not in available_configs:
+            rich_print("[red]Invalid input, try again[/red]")
+            continue
+        else:
+            break
+
+
+    with open(f"./configs/{settings_file_decision}_config.json", "r") as config_file:
+        config = json.load(config_file)
+    
+    options_table = Table("Setting","Current Value", box=box.HEAVY_EDGE, expand=True, style="dodger_blue2")
+
+    for setting in config:
+        options_table.add_row(str(setting), str(config[setting]))
+    
+    rich_print(options_table)
+
+    rich_print("Enter either the [green]Setting[/green] that you would like to change or [red]'exit'[/red] to return to the menu")
+    while True:
+        selected_setting = prompt("Setting")
+        if selected_setting not in config and selected_setting != "exit":
+            rich_print("[red]Invalid input, try again[/red]")
+            continue
+        else:
+            break
+
+    if selected_setting in config:
+        current_setting = config[selected_setting]
+        print(current_setting)
+        setting_type: Tuple[str] = setting_datatype(current_setting)
+        print(setting_type)
         
-
-    # with open("./configs/scan_config.json", "r") as scan_config_file:
-    #     scan_config = json.load(scan_config_file)
-
-    # from rich import print as rich_print
-    # from rich.table import Table
-    # from rich import box
-
-    # from os import listdir
-    # from typing import List
-    # from typer import prompt
-    # import json
-
-    # rich_print("[bold green]Settings[/bold green]")
-
-    # rich_print("Enter one of the below [green]available configs[/green] using it's name")
-
-    # available_configs: List[str] = listdir("./configs")
-    # for index, config in enumerate(available_configs):
-    #     available_configs[index] = config.split(".")[0].split("_", maxsplit=1)[0]
-    #     rich_print(f"- {available_configs[index]}")
+        if setting_type[0] == "list":
+            # list input and specify datatype from 
+            if current_setting == "scan_display_data":
+                config = display_data(config)
+            else:
+                # rich_print(f"Enter your new value for [green]'{current_setting}'[/green] of datatype [green]{setting_type[0]}[/green]")
+                # while True:
+                #     new_value = prompt("Value")
+                #     if type(new_value).__name__ != setting_type[0]:
+                #         rich_print("[red]Invalid input, try again[/red]")
+                #         log("warn", "User inputted a invalid type for the new setting value")
+                #         continue
+                #     else:
+                #         break
+                # TODO: Add entry of array values - split by commas, also strip() it
+                pass
+        else:
+            rich_print(f"Enter your new value for [green]'{current_setting}'[/green] of datatype [green]{setting_type[0]}[/green]")
+            while True:
+                new_value = prompt("Value")
+                if type(new_value).__name__ != setting_type[0]:
+                    rich_print("[red]Invalid input, try again[/red]")
+                    log("warn", "User inputted a invalid type for the new setting value")
+                    continue
+                else:
+                    break
     
-    # while True:
-    #     settings_file_decision: str = prompt("Action").lower().strip()
-    #     if settings_file_decision not in available_configs:
-    #         rich_print("[red]Invalid input, try again[/red]")
-    #         continue
-    #     else:
-    #         break
+    with open(f"./configs/{settings_file_decision}_config.json", "w") as config_file:
+        config_file.write(json.dump(config))
+        log("info", "Successfully wrote new config to file")
 
 
-    # with open(f"./configs/{settings_file_decision}_config.json", "r") as config_file:
-    #     config = json.load(config_file)
-    
-    # options_table = Table("Setting","Current Value", box=box.HEAVY_EDGE, expand=True, style="dodger_blue2")
+def setting_datatype(setting):
+    # Return the datatype, list_item_datatype (if applicable) of a setting value
+    datatype: str = type(setting).__name__
+    list_datatype: str = None
 
-    # for setting in config:
-    #     options_table.add_row(str(setting), str(config[setting]))
-    
-    # rich_print(options_table)
+    # If datatype is a string, return tuple with second value being the datatype of the list values
+    if datatype == "list":
+        list_datatype = type(setting[0]).__name__
 
-    # rich_print("Enter either the [green]Setting[/green] that you would like to change or [red]'exit'[/red] to return to the menu")
-    # while True:
-    #     selected_setting = prompt("Setting")
-    #     if selected_setting not in config and selected_setting != "exit":
-    #         rich_print("[red]Invalid input, try again[/red]")
-    #         continue
-    #     else:
-    #         break
-    
-    # print(config[selected_setting])
-
-def program_settings_configure():
-    pass
-
-def scan_settings_configure():
-    pass
+    return datatype, list_datatype
 
 def help():
     from utils import print_line
@@ -238,5 +272,6 @@ def help():
 if __name__ == "__main__":
     # scan()
     # help()
-    settings()
+    # settings()
+    print(setting_datatype("C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS"))
     
