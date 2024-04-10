@@ -10,13 +10,15 @@ def scan():
 
     # TODO: Add progress bar
     # TODO: Comment things for future me
+
     
     PROFILE_FOLDER_PATH: str = retrieve_path()
 
+    # Retrieve all filenames within the folder
     profiles: List[str] = os.listdir(PROFILE_FOLDER_PATH)
 
-    profile_files: List[Dict["filename": str, "valid": bool, "extension": str, "invalid_reason": str, "airport_index": int, "ident-found": str]] = [] # Filename, Reason, Extension
-
+    # Loop through each filename and check it has a valid extension
+    profile_files: List[Dict["filename": str, "valid": bool, "extension": str, "invalid_reason": str, "airport_index": int, "ident-found": str]] = []
     for profile in profiles:
         extension: str = profile.split(".")[-1]
         extensions: List[str] = retrieve_config("scan_config","recognised_profile_extensions")
@@ -25,7 +27,7 @@ def scan():
         else:
             profile_files.append({"filename": profile.split(".")[0], "valid": True, "extension": extension})
     
-
+    # Go through each valid file and find a valid airport_index (index is in airports.csv)
     for file in profile_files:
         if file["valid"] == True:
             for split_type in retrieve_config("scan_config", "recognised_profile_name_split_types"):
@@ -48,8 +50,9 @@ def scan():
             if "airport_index" not in file.keys():
                 file["valid"] = False
                 file["invalid_reason"] = "no_code_found"
-                # This is where a overrides.json can be added to
+                # TODO: This is where a overrides.json can be added too
 
+    # Check for duplicates based off airport_index values
     for file_index, file in enumerate(profile_files):
         for comparison_index, comparison_file in enumerate(profile_files):
             if (file["valid"] == True) and (comparison_file["valid"]) == True and (file_index != comparison_index):
@@ -58,10 +61,10 @@ def scan():
                     comparison_file["invalid_reason"] = "duplicate"
 
 
-    with open("./data/temp_results.json", "w") as temp_file:
-        temp_file.write(dumps(profile_files))
+    # with open("./data/temp_results.json", "w") as temp_file:
+    #     temp_file.write(dumps(profile_files))
 
-    
+    # Display results
     scan_results_table = Table(box=box.HEAVY_EDGE, expand=True, style="dodger_blue2")
     
     display_preference: List[str] = retrieve_config("scan_config","scan_display_data")
