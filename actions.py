@@ -1,12 +1,14 @@
 def scan():
     import os
-    from utils import retrieve_path, retrieve_config
+    from utils import retrieve_path, retrieve_config, print_line, yes_or_no, log
     from typing import List, Dict
     from json import dumps
     from rich.table import Table
     from rich import box
     from rich import print as rich_print
     import pandas as pd
+    from typer import prompt
+    import json
 
     # TODO: Add progress bar
     
@@ -16,7 +18,7 @@ def scan():
     profiles: List[str] = os.listdir(PROFILE_FOLDER_PATH)
 
     # Loop through each filename and check it has a valid extension
-    profile_files: List[Dict["filename": str, "valid": bool, "extension": str, "invalid_reason": str, "airport_index": int, "ident-found": str]] = []
+    profile_files: List[Dict["filename": str, "valid": bool, "extension": str, "invalid_reason": str, "airport_index": int, "ident-type": str]] = []
     for profile in profiles:
         extension: str = profile.split(".")[-1]
         extensions: List[str] = retrieve_config("scan_config","recognised_profile_extensions")
@@ -48,7 +50,7 @@ def scan():
             if "airport_index" not in file.keys():
                 file["valid"] = False
                 file["invalid_reason"] = "no_code_found"
-                # TODO: This is where a overrides.json can be added too
+                # TODO: Add in overrides.json check - compare filename and extension to see if there is a match and if so, use that code instead
 
     # Check for duplicates based off airport_index values
     for file_index, file in enumerate(profile_files):
@@ -77,32 +79,146 @@ def scan():
             current_airport: List = []
             for preference in display_preference:
                 current_airport.append(str(airport_info[preference]))
-            
             table_data.append(tuple(current_airport))
         else:
-            # TODO: Add it to erroneous table w/reasons for break (cannot display info because not all may have it
             invalid_data.append((profile["filename"], profile["extension"], profile["invalid_reason"]))
 
     for row in table_data:
         scan_results_table.add_row(*row)
 
-    if invalid_data != []:
-        erroneous_results_table = Table("Filename", "Extension", "Invalid Reason", box=box.HEAVY_EDGE, expand=True, style="gold1")
-
-        for row in invalid_data:
-            erroneous_results_table.add_row(*row)
-
-    # TODO: Once erroneous table created, if it exists then ask user if they want to review invalid filenames w/reasons then give option to manually enter icao or iata and then store in new data file with filename and corresponding icao and then check if file exists here if no airport can be found (Should also allow this for main data values incase it got it wrong)
-
+    print_line()
     rich_print(scan_results_table)
+    print_line()
+
+    # Display invalid data, and offer option to add overrides
+    if invalid_data != []:
+        erroneous_results_table = Table("ID", "Filename", "Extension", "Invalid Reason", box=box.HEAVY_EDGE, expand=True, style="gold1")
+
+        for index, row in enumerate(invalid_data):
+            erroneous_results_table.add_row(str(index), *row)
+        
+
+        rich_print("[orange1]Invalid data was found within the profiles folder, would you like to view this data?[/orange1]")
+        if yes_or_no():
+            log("info", "User chose to view invalid data")
+            rich_print(erroneous_results_table)
+            print_line()
+            rich_print("[orange1]Would you like to manually enter the airport code for any of these profiles?[/orange1]")
+            if yes_or_no():
+                log("info", "User chose to manually enter airport codes for invalid data")
+
+                print_line()
+                rich_print("[cornflower_blue]Step 1)[/cornflower_blue] Enter the ID of the profile you would like to update")
+                while True:
+                    try:
+                        id_input = str(prompt("ID"))
+                        if id_input not in [str(index) for index in range(len(invalid_data))]:
+                            rich_print("[red]Invalid input, try again[/red]")
+                            continue
+                        else:
+                            break
+                    except Exception as error:
+                        rich_print("[red]Invalid input, try again[/red]")
+                        log("warn", f"User inputted an invalid ID for the profile to update with error: {error}")
+                        continue
+
+                print_line()
+                rich_print("[cornflower_blue]Step 2)[/cornflower_blue] Enter type of identifer (icao or iata)")
+                while True:
+                    try:
+                        ident_type = str(prompt("Type")).lower().strip()
+                        if ident_type not in ["icao","iata"]:
+                            rich_print("[red]Invalid input, try again[/red]")
+                            log("warn", f"User inputted an invalid ident type for the profile to update")
+                            continue
+                        else:
+                            break
+                    except Exception as error:
+                        rich_print("[red]Invalid input, try again[/red]")
+                        log("warn", f"User inputted an invalid ident type for the profile to update with error: {error}")
+                        continue
+
+                print_line()
+                rich_print("[cornflower_blue]Step 3)[/cornflower_blue] Enter the airport code")
+                while True:
+                    try:
+                        airport_code = prompt("Code").upper().strip()
+                        if ((len(airport_code) == 4 and ident_type == "icao")
+                            or (len(airport_code) == 3 and ident_type == "iata")):
+                            if ident_type == "icao":
+                                ident_type = "ident"
+                            else:
+                                ident_type = "iata_code"
+                            if search(airport_code, ident_type) == None:
+                                rich_print("[red]Airport code could not be found within dataset, try again[/red]")
+                                rich_print("[orange1]Note: If this error is persistent, this airport code may not be present in the dataset in use[/orange1]")
+                                continue
+                            else:
+                                break
+                        else:
+                            rich_print("[red]Invalid input, try again[/red]")
+                            continue
+                    except Exception as error:
+                        rich_print("[red]Invalid input, try again[/red]")
+                        continue
+                
+
+                print_line()
+                rich_print("Confirm the changes by entering [green]'confirm'[/green] or [red]'cancel'[/red] to stop the changes")
+                rich_print("[gold1]Note: This will automatically override any existing overrides for this filename and extension/filetype[/gold1]")
+                while True:
+                    try:
+                        confirm_decision = prompt("Action").lower().strip()
+                        if confirm_decision not in ["confirm","cancel"]:
+                            rich_print("[red]Invalid input, try again[/red]")
+                            continue
+                        else:
+                            break
+                    except Exception as error:
+                        rich_print("[red]Invalid input, try again[/red]")
+                        log("warn", "User inputted an invalid action for the profile update")
+                        continue
+                if confirm_decision == "confirm":
+                    log("info", f"User confirmed the changes to the profile with ID {id_input} with new ident type of {ident_type} and code of {airport_code}")
+                    
+                    try:
+                        with open("./data/overrides.json", "r") as overrides_file:
+                            overrides = json.load(overrides_file)
+                    except FileNotFoundError:
+                        log("warn", "No overrides.json file found, program will create a new one")
+                        overrides = {"override_idents": []}
+
+                    for override in overrides["override_idents"]:
+                        if override["filename"] == invalid_data[int(id_input)][0] and override["extension"] == invalid_data[int(id_input)][1]:
+                            overrides["override_idents"].remove(override)
+                    
+                    overrides["override_idents"].append({"filename": invalid_data[int(id_input)][0], "ident_value": airport_code, "ident_type": ident_type, "extension": invalid_data[int(id_input)][1]})
+
+                    try:
+                        with open("./data/overrides.json", "w") as overrides_file:
+                            overrides_file.write(json.dumps(overrides))
+                            log("info", "Successfully wrote new overrides to file")
+                    except Exception as error:
+                        log("warn", f"Failed to write new overrides to file with error: {error}")
+                        rich_print("[red]Failed to write new overrides to file, action cancelled[/red]")
+
+            
+
+
 
 # TODO: Allow user to update data for a file manually (including found airport files incase it was misidentified) and then save this in a json file in ./data to be scanned before outputting any other time for any matches to then replace existing info with what is in the file
 
 
-def search(target: str, type: str) -> int | None:
-    # Binary search algorithm, used to search for the target in the data (an airport code within the airports.csv file)
+def search(target: str, type: str = "ident") -> int | None:
+    # Binary search algorithm, used to search for the target in the data (an airport code within the airports.csv file) with the specified type (icao or iata)
     import pandas as pd
     data = pd.read_csv("./data/airports.csv")
+    
+    if type == "icao":
+        type = "ident"
+    elif type == "iata":
+        type = "iata_code"
+    
     data = data[type]
     low = 0
     high = len(data) - 1

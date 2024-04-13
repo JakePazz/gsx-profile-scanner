@@ -36,6 +36,7 @@ def setup():
         log("warn","'configs' folder does not exist but is now being created")
         os.mkdir("./configs")
         log("info","Configs folder created")
+
         
     # if system username not found, get user to manually enter it
     username: str
