@@ -9,8 +9,6 @@ def scan():
     import pandas as pd
 
     # TODO: Add progress bar
-    # TODO: Comment things for future me
-
     
     PROFILE_FOLDER_PATH: str = retrieve_path()
 
@@ -60,10 +58,6 @@ def scan():
                     comparison_file["valid"] = False
                     comparison_file["invalid_reason"] = "duplicate"
 
-
-    # with open("./data/temp_results.json", "w") as temp_file:
-    #     temp_file.write(dumps(profile_files))
-
     # Display results
     scan_results_table = Table(box=box.HEAVY_EDGE, expand=True, style="dodger_blue2")
     
@@ -87,15 +81,16 @@ def scan():
             table_data.append(tuple(current_airport))
         else:
             # TODO: Add it to erroneous table w/reasons for break (cannot display info because not all may have it
-            invalid_data.append(tuple(profile["filename"], profile["extension"], profile["invalid_reason"]))
+            invalid_data.append((profile["filename"], profile["extension"], profile["invalid_reason"]))
 
     for row in table_data:
         scan_results_table.add_row(*row)
 
-    erroneous_results_table = Table("Filename", "Extension", "Invalid Reason", box=box.HEAVY_EDGE, expand=True, style="gold1")
-    
-    for row in invalid_data:
-        erroneous_results_table.add_row(*row)
+    if invalid_data != []:
+        erroneous_results_table = Table("Filename", "Extension", "Invalid Reason", box=box.HEAVY_EDGE, expand=True, style="gold1")
+
+        for row in invalid_data:
+            erroneous_results_table.add_row(*row)
 
     # TODO: Once erroneous table created, if it exists then ask user if they want to review invalid filenames w/reasons then give option to manually enter icao or iata and then store in new data file with filename and corresponding icao and then check if file exists here if no airport can be found (Should also allow this for main data values incase it got it wrong)
 
@@ -124,29 +119,25 @@ def search(target: str, type: str) -> int | None:
 
 def settings():
     # Access settings from the program_config.json file and scan_config.json file
-    """
-- Ask user which config they want to see and change
-- Display available configs and current state; load from the object (get input rules based off if it is an array or not)
-- Ask and get what setting user wants to change
-- Apply change
-- Store in configs_audit.txt
-    """
 
     from rich import print as rich_print
     from rich.table import Table
     from rich import box
 
-    from os import listdir
+    from datetime import datetime
+    from os import listdir, path
     from typing import List, Tuple
     from typer import prompt
     import json
 
-    from utils import display_data, log
+    from utils import display_data, log, print_line
+
+
 
     rich_print("[bold green]Settings[/bold green]")
 
+    # Select what config file to view and edit
     rich_print("Enter one of the below [green]available configs[/green] using it's name")
-
     available_configs: List[str] = listdir("./configs")
     for index, config in enumerate(available_configs):
         available_configs[index] = config.split(".")[0].split("_", maxsplit=1)[0]
@@ -161,6 +152,7 @@ def settings():
             break
 
 
+    # Load config, display settings in a table w/current values and ask user to select a setting to change
     with open(f"./configs/{settings_file_decision}_config.json", "r") as config_file:
         config = json.load(config_file)
     
@@ -173,49 +165,79 @@ def settings():
 
     rich_print("Enter either the [green]Setting[/green] that you would like to change or [red]'exit'[/red] to return to the menu")
     while True:
-        selected_setting = prompt("Setting")
-        if selected_setting not in config and selected_setting != "exit":
+        selected_setting_key = prompt("Setting").lower()
+        if selected_setting_key not in config and selected_setting_key != "exit":
             rich_print("[red]Invalid input, try again[/red]")
             continue
         else:
             break
 
-    if selected_setting in config:
-        current_setting = config[selected_setting]
-        print(current_setting)
-        setting_type: Tuple[str] = setting_datatype(current_setting)
-        print(setting_type)
+    # If user not exiting, ask for new value
+    # Note: Some hardcoded custom validation/alternative methods of input for certain settings
+    if selected_setting_key in config:
+        selected_setting_value = config[selected_setting_key]
+        setting_type: Tuple[str] = setting_datatype(selected_setting_value)
+        log("info",f"Setting type found to be {setting_type}")
         
         if setting_type[0] == "list":
-            # list input and specify datatype from 
-            if current_setting == "scan_display_data":
-                config = display_data(config)
+            if selected_setting_key == "scan_display_data":
+                config, prev_value, new_value = display_data(config, return_values=True)
             else:
-                # rich_print(f"Enter your new value for [green]'{current_setting}'[/green] of datatype [green]{setting_type[0]}[/green]")
-                # while True:
-                #     new_value = prompt("Value")
-                #     if type(new_value).__name__ != setting_type[0]:
-                #         rich_print("[red]Invalid input, try again[/red]")
-                #         log("warn", "User inputted a invalid type for the new setting value")
-                #         continue
-                #     else:
-                #         break
-                # TODO: Add entry of array values - split by commas, also strip() it
-                pass
+                rich_print(f"Enter your new values for [green]'{selected_setting_value}'[/green] of datatype [green]{setting_type[0]}[/green] as a list seperated by ',' (eg: 2,3,5)\nCurrent value: {config[selected_setting_key]}")
+                while True:
+                    new_value = prompt("Value").split(",")
+                    new_value = [value.strip() for value in new_value] # Remove any whitespace
+                    if type(new_value).__name__ != setting_type[0]:
+                        rich_print("[red]Invalid input, try again[/red]")
+                        log("warn", "User inputted an invalid type for the new setting value")
+                        continue
+                    else:
+                        break
         else:
-            rich_print(f"Enter your new value for [green]'{current_setting}'[/green] of datatype [green]{setting_type[0]}[/green]")
+            rich_print(f"Enter your new value for [green]'{selected_setting_value}'[/green] of datatype [green]{setting_type[0]}[/green]")
             while True:
                 new_value = prompt("Value")
                 if type(new_value).__name__ != setting_type[0]:
                     rich_print("[red]Invalid input, try again[/red]")
                     log("warn", "User inputted a invalid type for the new setting value")
-                    continue
                 else:
-                    break
+                    # Validation, specifically for paths (where key ends with '_path')
+                    if selected_setting_key.split("_")[-1] == "path":
+                        if not path.exists(new_value):
+                            rich_print("[red]Invalid value, path could not be found. Try again[/red]")
+                            continue
+                        else:
+                            break
+                    else:
+                        break
     
-    with open(f"./configs/{settings_file_decision}_config.json", "w") as config_file:
-        config_file.write(json.dump(config))
-        log("info", "Successfully wrote new config to file")
+    # Confirm change
+    while True:
+        print_line()
+        rich_print(f"Setting: [yellow]{selected_setting_key}[/yellow]\nCurrent Value: [red]{selected_setting_value}[/red]\nNew Value: [green]{new_value}[/green]")
+
+        print_line()
+        rich_print(f"Enter [bold green]'continue'[/bold green] to complete the change shown above or [bold red]'cancel'[/bold red] to stop the change and return to the menu")
+        continue_decision = prompt("Action")
+        match continue_decision:
+            case "cancel":
+                log("info", f"User cancelled the change to {selected_setting_value} with potential new value of {new_value}")
+                break
+            case "continue":
+                prev_value = config[selected_setting_key]
+                config[selected_setting_key] = new_value
+                try:
+                    with open(f"./configs/{settings_file_decision}_config.json", "w") as config_file:
+                        config_file.write(json.dumps(config))
+                        log("info", "Successfully wrote new config to file")
+                        log("info", f"Changed '{selected_setting_key}' to new value of '{new_value}' from '{prev_value}'", log_file="configs_audit")
+                except Exception as error:
+                    log("warn", f"Failed to write new config to file with error: {error}")
+                    rich_print("[red]Failed to write new config to file, action cancelled[/red]")
+                break
+            case _:
+                rich_print("[red]Invalid input, try again[/red]")
+                continue
 
 
 def setting_datatype(setting):
@@ -273,8 +295,8 @@ def help():
 
 
 if __name__ == "__main__":
-    # scan()
+    scan()
     # help()
     # settings()
-    print(setting_datatype("C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS"))
+    
     

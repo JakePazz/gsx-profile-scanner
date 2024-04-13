@@ -60,7 +60,7 @@ def print_line() -> None:
     except Exception as error:
         log("warn", f"Failed to print_line() with error: {error}")
 
-def retrieve_config(config_file: str, config_item: str):
+def retrieve_config(config_file: str, config_item: str) -> str:
     """Retrieve one item from either program_config or scan_config"""
     from json import load
     from rich import print as rich_print
@@ -78,7 +78,7 @@ def retrieve_config(config_file: str, config_item: str):
         rich_print(f"[red]Error when returning requested config item: {error}[/red]")
         raise Exit()
 
-def print_profiles_folder(profiles_folder_path: str=None):
+def print_profiles_folder(profiles_folder_path: str=None) -> None:
     from os import scandir
     from rich.tree import Tree
     from rich import print as rich_print
@@ -111,7 +111,7 @@ def yes_or_no() -> bool:
                 rich_print("[red]Invalid input, try again[/red]")
                 continue
 
-def display_data(scan_config):
+def display_data(scan_config, return_values: bool = False) -> object:
     # Returns updated scan_config file
     from rich import print as rich_print
     from rich.table import Table
@@ -119,6 +119,12 @@ def display_data(scan_config):
     from typer import prompt
     from typing import List
 
+    try:
+        if return_values:
+            prev_value = scan_config["scan_display_data"]
+    except Exception as error:
+        log("error", f"Could not get current value of 'scan_display_data' before changes with error: {error}")
+        prev_value = None
     # Get user to decide on what data they want to be shown when using 'scan' command
     print_line()
     rich_print("When using the 'scan' command you will be shown a list of all airports found, corresponding to your installed profiles. You must now choose what information you wish to be displayed for each airport.")
@@ -174,14 +180,18 @@ def display_data(scan_config):
                     print("Invalid entry, try again.")
                     log("warn", "User entered invalid options ")
                     continue
-
+            
             scan_config["scan_display_data"] = []
             
             for choice in display_data_choices:
                 print(f"Choice: {choice.strip()}")
                 scan_config["scan_display_data"].append(options_list[int(choice)-1])
             log("info",f"User selected {display_data_choices} as the display data values")
-    return scan_config
+    
+    if return_values:
+        return scan_config, prev_value if prev_value != None else "No Prev. Value", scan_config["scan_display_data"]
+    else:
+        return scan_config
 
 if __name__ == "__main__":
     pass

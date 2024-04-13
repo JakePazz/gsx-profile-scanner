@@ -16,6 +16,7 @@ import utils
 # TODO: Add option to mass install profiles from a specified folder (future feature)
 # TODO: Add caching to remember past airports, especially ones that the system cannot detect
 # TODO: Add manual data file input (from same source, but to be able to update it etc.) and add auto data request - two options for an update_source cmd
+# TODO: Test, test, test
 
 def main():
     boot()

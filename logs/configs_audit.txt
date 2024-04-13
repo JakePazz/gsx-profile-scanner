@@ -1,1 +1,2 @@
-Make this file store any changes that are made within the configs
+
+[info] [2024-04-13T01:58:26.157646] Changed 'recognised_profile_extensions' to new value of '['ini', 'py', 'txt', 'cfg']' from '['ini', 'py']'
