@@ -78,17 +78,17 @@ def retrieve_config(config_file: str, config_item: str) -> str:
         rich_print(f"[red]Error when returning requested config item: {error}[/red]")
         raise Exit()
 
-def print_profiles_folder(profiles_folder_path: str=None) -> None:
+def print_folder_tree(folder_path: str=None) -> None:
     from os import scandir
     from rich.tree import Tree
     from rich import print as rich_print
 
-    if profiles_folder_path == None:
-        profiles_folder_path = retrieve_path()
+    if folder_path == None:
+        folder_path = retrieve_path()
 
     tree = Tree("Profiles Folder", style="green bold", guide_style="grey39 bold")
     try:
-        with scandir(profiles_folder_path) as profiles_folder:
+        with scandir(folder_path) as profiles_folder:
             for file in profiles_folder:
                 tree.add(file.name, style="bold dark_green")
     except FileNotFoundError as error:
@@ -192,6 +192,19 @@ def display_data(scan_config, return_values: bool = False) -> object:
         return scan_config, prev_value if prev_value != None else "No Prev. Value", scan_config["scan_display_data"]
     else:
         return scan_config
+
+def airport_data_rq(): # UNUSED
+    # Request the airports.csv file from website
+    import requests as rq
+    import pandas as pd
+
+    response = rq.get("https://davidmegginson.github.io/ourairports-data/airports.csv", allow_redirects=True)
+
+    # with open("./data/airports_requested.csv", "w", encoding="utf-8") as file:
+    #     file.write(response.content.decode("utf-8"))
+    
+    return response.content.decode("utf-8")
+
 
 if __name__ == "__main__":
     pass

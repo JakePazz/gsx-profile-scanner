@@ -9,7 +9,7 @@ from json import dumps
 from typing import List
 
 # Internal imports
-from utils import log, print_line, print_profiles_folder, display_data
+from utils import log, print_line, print_folder_tree, display_data
 
 def setup():
     # The configs that will be written to the json files once setup is complete
@@ -143,12 +143,36 @@ def setup():
                             "py"
                         ]
 
+    # Check if there is a overrides.json file in the configs folder and ask user if they want to use it or replace it
+    if os.path.exists("./data/overrides.json"):
+        rich_print("[bold yellow]Overrides.json file found in data folder[/bold yellow]")
+        rich_print("[bold]Would you like to use this file for your scan? Otherwise this file will be reset.[/bold]")
+        while True:
+            use_overrides_decision: str = typer.prompt("y/n").lower().strip()
+            if use_overrides_decision not in ["y", "n"]:
+                log("info", "Invalid input (did not match required 'y' or 'n')")
+                rich_print("[red]Invalid input. Please try again.[/red]")
+                continue
+            else:
+                log("info",f"User selected {use_overrides_decision} as decision for using overrides.json file")
+                break
+        if use_overrides_decision == "n":
+            with open("./data/overrides.json", "w") as overrides_file:
+                overrides_file.write(dumps({}))
+            log("info", "User chose to use the overrides.json file for their scan")
+        else:
+            log("info", "User chose not to use the overrides.json file for their scan")
+    else:
+        log("info", "No overrides.json file found in configs folder")
+        
+
     print_line()
     rich_print("[italic yellow]Note: Profile filename split types set to '-' and '_' as default (can be changed later in settings)[/italic yellow]")
     scan_config["recognised_profile_name_split_types"] = [
         "-",
         "_"
     ]
+    
 
     # Write the scan and program configs to json files
     try:
@@ -192,7 +216,7 @@ def manual_path_entry() -> str:
 
 def confirm_path(profiles_folder_path: str):
     
-    print_profiles_folder(profiles_folder_path=profiles_folder_path)
+    print_folder_tree(folder_path=profiles_folder_path)
 
     rich_print(f"Confirm the following path '{profiles_folder_path}' is correct")
     while True:

@@ -6,12 +6,12 @@ def scan():
     from rich.table import Table
     from rich import box
     from rich import print as rich_print
+    from rich.progress import track
     import pandas as pd
     from typer import prompt
     import json
 
-    # TODO: Add progress bar
-    
+    # Retrieve the path to the profiles folder
     PROFILE_FOLDER_PATH: str = retrieve_path()
 
     # Retrieve all filenames within the folder
@@ -19,7 +19,7 @@ def scan():
 
     # Loop through each filename and check it has a valid extension
     profile_files: List[Dict["filename": str, "valid": bool, "extension": str, "invalid_reason": str, "airport_index": int, "ident-type": str]] = []
-    for profile in profiles:
+    for profile in track(profiles, description="Extension Check"):
         extension: str = profile.split(".")[-1]
         extensions: List[str] = retrieve_config("scan_config","recognised_profile_extensions")
         if extension not in extensions:
@@ -28,7 +28,7 @@ def scan():
             profile_files.append({"filename": profile.split(".")[0], "valid": True, "extension": extension})
     
     # Go through each valid file and find a valid airport_index (index is in airports.csv)
-    for file in profile_files:
+    for file in track(profile_files, description="Ident Search"):
         if file["valid"] == True:
             for split_type in retrieve_config("scan_config", "recognised_profile_name_split_types"):
                 filename_parts: List[str] = file["filename"].split(split_type)
@@ -48,9 +48,21 @@ def scan():
                 if "airport_index" in file.keys():
                     break
             if "airport_index" not in file.keys():
-                file["valid"] = False
-                file["invalid_reason"] = "no_code_found"
-                # TODO: Add in overrides.json check - compare filename and extension to see if there is a match and if so, use that code instead
+                override = check_overrides(file["filename"])
+                if override != None:
+                    if override["extension"] == file["extension"]:
+                        file["airport_index"] = search(override["ident_value"], override["ident_type"])
+                        if file["airport_index"] != None:
+                            file["ident-found"] = override["ident_type"]
+                            file["valid"] = True
+                            file["invalid_reason"] = None
+                        else:
+                            file["valid"] = False
+                            file["invalid_reason"] = "override_invalid"
+                else:
+                    file["valid"] = False
+                    file["invalid_reason"] = "no_code_found"
+
 
     # Check for duplicates based off airport_index values
     for file_index, file in enumerate(profile_files):
@@ -72,9 +84,8 @@ def scan():
     table_data: List[tuple] = []
     invalid_data: List[tuple] = []
 
-    for profile in profile_files:
+    for profile in track(profile_files, description="Table Creation"):
         if profile["valid"] == True:
-            data = pd.read_csv("./data/airports.csv")
             airport_info = data.iloc[profile["airport_index"]]
             current_airport: List = []
             for preference in display_preference:
@@ -85,6 +96,8 @@ def scan():
 
     for row in table_data:
         scan_results_table.add_row(*row)
+
+    rich_print("[bold green]Scan Complete![/bold green]")
 
     print_line()
     rich_print(scan_results_table)
@@ -200,14 +213,90 @@ def scan():
                             log("info", "Successfully wrote new overrides to file")
                     except Exception as error:
                         log("warn", f"Failed to write new overrides to file with error: {error}")
-                        rich_print("[red]Failed to write new overrides to file, action cancelled[/red]")
+                        rich_print("[red]Failed to write new overrides to file, action cancelled[/red]")            
 
-            
+def check_overrides(filename):
+    # Check if there are any overrides for a specific filename
+    import json
+    from utils import log
 
+    try:
+        with open("./data/overrides.json", "r") as overrides_file:
+            overrides = json.load(overrides_file)
+    except FileNotFoundError:
+        log("error", "No overrides.json file found, overrides will be ignored")
 
+    for override in overrides["override_idents"]:
+        if override["filename"] == filename:
+            return override
+    
+    return None
 
-# TODO: Allow user to update data for a file manually (including found airport files incase it was misidentified) and then save this in a json file in ./data to be scanned before outputting any other time for any matches to then replace existing info with what is in the file
+def file_upload():
+    # Allow user to update data for a file manually
+    from rich import print as rich_print
+    from os import scandir, path
+    from utils import print_line, log, print_folder_tree
+    from typing import List
+    from typer import prompt
+    
+    print_line()
+    print_folder_tree(folder_path="./data")
+    
 
+    data_filenames: List[str] = []
+    with scandir("./data") as profiles_folder:
+        for file in profiles_folder:
+            data_filenames.append(file.name)
+
+    rich_print("Select a data file to replace by entering it's [green]name[/green] (inc. extension), or type [red]'exit'[/red] to return to the menu")
+    while True:
+        selected_filename = prompt("Action")
+        if selected_filename in data_filenames or selected_filename.lower() == "exit":
+            break
+        else:
+            rich_print("[red]Invalid input, try again[/red]")
+            continue
+    print_line()
+    
+    if selected_filename != "exit":
+        rich_print("Enter the path of the new data file to replace the existing one")
+        rich_print("Note: The file [bold]MUST[/bold] be in the same format and type as the existing file")
+        while True:
+            new_data_path = prompt("Path")
+            if not path.isfile(new_data_path):
+                rich_print("[red]Invalid path, try again[/red]")
+                log("warn", "User inputted an invalid path for the data file upload")
+                continue
+            elif new_data_path.split(".")[-1] != selected_filename.split(".")[-1]:
+                rich_print("[red]Invalid file type, try again[/red]")
+                log("warn", "User inputted a file with an invalid file type for the data file upload")
+                continue
+            else:
+                break
+        
+        rich_print("Confirm the changes by entering [green]'confirm'[/green] or [red]'cancel'[/red] to stop the changes")
+        while True:
+            confirm_decision = prompt("Action").lower().strip()
+            if confirm_decision not in ["confirm","cancel"]:
+                rich_print("[red]Invalid input, try again[/red]")
+                log("warn", "User inputted an invalid action for the data file update confirmation")
+                continue
+            else:
+                break
+        
+        if confirm_decision == "confirm":
+            log("info", f"User confirmed the changes to the data file {selected_filename} with new file at path {new_data_path}")
+            from shutil import copyfile
+            try:
+                copyfile(new_data_path, f"./data/{selected_filename}")
+                log("info", "Successfully copied new data file to data folder")
+            except Exception as error:
+                log("warn", f"Failed to copy new data file to data folder with error: {error}")
+                rich_print("[red]Failed to copy new data file to data folder, action cancelled[/red]")
+    
+
+    
 
 def search(target: str, type: str = "ident") -> int | None:
     # Binary search algorithm, used to search for the target in the data (an airport code within the airports.csv file) with the specified type (icao or iata)
@@ -231,7 +320,7 @@ def search(target: str, type: str = "ident") -> int | None:
         else:
             high = mid - 1
     return None
-
+    from rich import print as rich_print
 
 def settings():
     # Access settings from the program_config.json file and scan_config.json file
@@ -289,8 +378,8 @@ def settings():
             break
 
     # If user not exiting, ask for new value
-    # Note: Some hardcoded custom validation/alternative methods of input for certain settings
-    if selected_setting_key in config:
+    # Note: Some hardcoded custom validation/alternative methods of input for certain settings are in use
+    if selected_setting_key != "exit":
         selected_setting_value = config[selected_setting_key]
         setting_type: Tuple[str] = setting_datatype(selected_setting_value)
         log("info",f"Setting type found to be {setting_type}")
@@ -327,33 +416,33 @@ def settings():
                     else:
                         break
     
-    # Confirm change
-    while True:
-        print_line()
-        rich_print(f"Setting: [yellow]{selected_setting_key}[/yellow]\nCurrent Value: [red]{selected_setting_value}[/red]\nNew Value: [green]{new_value}[/green]")
+        # Confirm change
+        while True:
+            print_line()
+            rich_print(f"Setting: [yellow]{selected_setting_key}[/yellow]\nCurrent Value: [red]{selected_setting_value}[/red]\nNew Value: [green]{new_value}[/green]")
 
-        print_line()
-        rich_print(f"Enter [bold green]'continue'[/bold green] to complete the change shown above or [bold red]'cancel'[/bold red] to stop the change and return to the menu")
-        continue_decision = prompt("Action")
-        match continue_decision:
-            case "cancel":
-                log("info", f"User cancelled the change to {selected_setting_value} with potential new value of {new_value}")
-                break
-            case "continue":
-                prev_value = config[selected_setting_key]
-                config[selected_setting_key] = new_value
-                try:
-                    with open(f"./configs/{settings_file_decision}_config.json", "w") as config_file:
-                        config_file.write(json.dumps(config))
-                        log("info", "Successfully wrote new config to file")
-                        log("info", f"Changed '{selected_setting_key}' to new value of '{new_value}' from '{prev_value}'", log_file="configs_audit")
-                except Exception as error:
-                    log("warn", f"Failed to write new config to file with error: {error}")
-                    rich_print("[red]Failed to write new config to file, action cancelled[/red]")
-                break
-            case _:
-                rich_print("[red]Invalid input, try again[/red]")
-                continue
+            print_line()
+            rich_print(f"Enter [bold green]'continue'[/bold green] to complete the change shown above or [bold red]'cancel'[/bold red] to stop the change and return to the menu")
+            continue_decision = prompt("Action")
+            match continue_decision:
+                case "cancel":
+                    log("info", f"User cancelled the change to {selected_setting_value} with potential new value of {new_value}")
+                    break
+                case "continue":
+                    prev_value = config[selected_setting_key]
+                    config[selected_setting_key] = new_value
+                    try:
+                        with open(f"./configs/{settings_file_decision}_config.json", "w") as config_file:
+                            config_file.write(json.dumps(config))
+                            log("info", "Successfully wrote new config to file")
+                            log("info", f"Changed '{selected_setting_key}' to new value of '{new_value}' from '{prev_value}'", log_file="configs_audit")
+                    except Exception as error:
+                        log("warn", f"Failed to write new config to file with error: {error}")
+                        rich_print("[red]Failed to write new config to file, action cancelled[/red]")
+                    break
+                case _:
+                    rich_print("[red]Invalid input, try again[/red]")
+                    continue
 
 
 def setting_datatype(setting):
@@ -414,5 +503,5 @@ if __name__ == "__main__":
     scan()
     # help()
     # settings()
-    
+    # file_upload()
     

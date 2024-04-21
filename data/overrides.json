@@ -1,16 +1,1 @@
-{
-  "override_idents": [
-    {
-      "filename": "egll-iniBuilds-rwprofiles-0lliejs",
-      "ident_value": "EGLL",
-      "ident_type": "ident",
-      "extension": "py"
-    },
-    {
-      "filename": "eghe-FGHSS",
-      "ident_value": "EGPH",
-      "ident_type": "ident",
-      "extension": "py"
-    }
-  ]
-}
+{}

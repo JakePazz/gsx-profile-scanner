@@ -14,8 +14,6 @@ from setup import setup
 import utils
 
 # TODO: Add option to mass install profiles from a specified folder (future feature)
-# TODO: Add caching to remember past airports, especially ones that the system cannot detect
-# TODO: Add manual data file input (from same source, but to be able to update it etc.) and add auto data request - two options for an update_source cmd
 # TODO: Test, test, test
 
 def main():
@@ -27,6 +25,7 @@ def main():
         commands_table.add_row("Scan Folder","scan", "Scan the specified profiles folder for GSX profiles")
         commands_table.add_row("Open Folder", "open", "Open the GSX Pro Profiles folder in file explorer")
         commands_table.add_row("Settings","settings", "View and edit the settings for this program")
+        commands_table.add_row("Data File Upload", "upload", "Upload a new data file to the program")
         commands_table.add_row("Help","help", "View the help menu")
         commands_table.add_row("Exit","exit", "Exit the program")
 
@@ -49,6 +48,9 @@ def main():
                 utils.open_profile_folder()
             case "settings":
                 actn.settings()
+                main()
+            case "upload":
+                actn.file_upload()
                 main()
             case "help":
                 actn.help()
