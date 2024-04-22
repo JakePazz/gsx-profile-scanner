@@ -12,6 +12,8 @@ from typing import List
 from utils import log, print_line, print_folder_tree, display_data
 
 def setup():
+    # Setup the program by creating the necessary files, folders and configs
+
     # The configs that will be written to the json files once setup is complete
     scan_config: dict = {}
     program_config: dict = {}
@@ -197,14 +199,13 @@ def setup():
     
     rich_print("[green bold]Setup compelete![/green bold]")
     
-
 def manual_path_entry() -> str:
     # Allow user to manually enter the path of their GSX Profile folder
     print_line()
     rich_print("The system is unable to identify your GSX Pro Profile Path. Please enter it manually below")
     while True:
-        path_input = typer.prompt("Profile Folder Path")
-        if os.path.isdir(path_input):
+        path_input = prompt("Profile Folder Path")
+        if isdir(path_input):
             log("info", "User successfully manually entered the path for GSX Profile folder")
             rich_print("[green]Path accepted[/green]")
             return path_input
@@ -213,9 +214,7 @@ def manual_path_entry() -> str:
             rich_print("[red bold]Invalid directory path, try again[/red bold]")
             continue
 
-
 def confirm_path(profiles_folder_path: str):
-    
     print_folder_tree(folder_path=profiles_folder_path)
 
     rich_print(f"Confirm the following path '{profiles_folder_path}' is correct")

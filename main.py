@@ -1,28 +1,29 @@
-# External imports
-import typer
-from rich import print as rich_print
-from rich.panel import Panel
-from rich.markdown import Markdown
-from rich.table import Table
-import pandas as pd
-import json
-from os import path
-
-# Internal imports
-import actions as actn
-from setup import setup
-import utils
-
-# TODO: Add option to mass install profiles from a specified folder (future feature)
-# TODO: Test, test, test
+from typer import run
 
 def main():
+    # External imports
+    import typer
+    from rich import print as rich_print
+    from rich.panel import Panel
+    from rich.markdown import Markdown
+    from rich.table import Table
+    
+    # Internal imports
+    import actions as actn
+    from setup import setup
+    import utils
+
     boot()
+
     # Display menu and accept user input for command choice and execute
     # While loop will mean menu is show again once current action is complete
     while True:
+        utils.print_line()
+        # TODO: Add a "Action complete, 'continue' to main menu or 'exit'" prompt here so after each action the user can choose to continue or exit
+
         commands_table = Table("Command", "Trigger", "Description", style="bold yellow")
         commands_table.add_row("Scan Folder","scan", "Scan the specified profiles folder for GSX profiles")
+        commands_table.add_row("Search Airport", "search", "Search for a specific airport in the specified profiles folder")
         commands_table.add_row("Open Folder", "open", "Open the GSX Pro Profiles folder in file explorer")
         commands_table.add_row("Settings","settings", "View and edit the settings for this program")
         commands_table.add_row("Data File Upload", "upload", "Upload a new data file to the program")
@@ -44,6 +45,9 @@ def main():
             case "scan":
                 actn.scan()
                 main()
+            case "search":
+                actn.search()
+                main()
             case "open":
                 utils.open_profile_folder()
             case "settings":
@@ -61,7 +65,11 @@ def main():
 
 def boot() -> None:
     # Check if setup is required by confirming folders and successful_configuration == True
-
+    import json
+    from os import path
+    from rich import print as rich_print
+    from rich.panel import Panel
+    from setup import setup
     if not path.exists("./configs"):
         rich_print(Panel("[bright_yellow]Invalid installation found (no configs folder), launching setup[/bright_yellow]", title="Critical Error", style="bold orange1", title_align="left"))
         setup()
@@ -84,4 +92,4 @@ def boot() -> None:
         rich_print(Panel("[bright_yellow]Invalid installation found (no program_config), launching setup[/bright_yellow]", title="Critical Error", style="bold orange1", title_align="left"))
         setup()
 
-typer.run(main)
+run(main)

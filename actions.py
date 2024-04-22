@@ -1,8 +1,5 @@
 def scan():
-    import os
-    from utils import retrieve_path, retrieve_config, print_line, yes_or_no, log
     from typing import List, Dict
-    from json import dumps
     from rich.table import Table
     from rich import box
     from rich import print as rich_print
@@ -11,58 +8,18 @@ def scan():
     from typer import prompt
     import json
 
-    # Retrieve the path to the profiles folder
-    PROFILE_FOLDER_PATH: str = retrieve_path()
-
-    # Retrieve all filenames within the folder
-    profiles: List[str] = os.listdir(PROFILE_FOLDER_PATH)
+    from utils import retrieve_config, print_line, yes_or_no, log
+    
 
     # Loop through each filename and check it has a valid extension
-    profile_files: List[Dict["filename": str, "valid": bool, "extension": str, "invalid_reason": str, "airport_index": int, "ident-type": str]] = []
-    for profile in track(profiles, description="Extension Check"):
-        extension: str = profile.split(".")[-1]
-        extensions: List[str] = retrieve_config("scan_config","recognised_profile_extensions")
-        if extension not in extensions:
-            profile_files.append({"filename": profile.split(".")[0], "valid": False,"extension": extension, "invalid_reason": "invalid_extension"})
-        else:
-            profile_files.append({"filename": profile.split(".")[0], "valid": True, "extension": extension})
-    
-    # Go through each valid file and find a valid airport_index (index is in airports.csv)
-    for file in track(profile_files, description="Ident Search"):
-        if file["valid"] == True:
-            for split_type in retrieve_config("scan_config", "recognised_profile_name_split_types"):
-                filename_parts: List[str] = file["filename"].split(split_type)
-                for part in filename_parts:
-                    if len(part) == 4:
-                        icao_search_result: int | None = search(part.upper(), "ident")
-                        if icao_search_result != None:
-                            file["airport_index"] = icao_search_result
-                            file["ident-found"] = "icao"
-                            break
-                    elif len(part) == 3:
-                        iata_search_result: int | None = search(part.upper(), "iata_code")
-                        if iata_search_result != None:
-                            file["airport_index"] = iata_search_result
-                            file["ident-found"] = "iata"
-                            break
-                if "airport_index" in file.keys():
-                    break
-            if "airport_index" not in file.keys():
-                override = check_overrides(file["filename"])
-                if override != None:
-                    if override["extension"] == file["extension"]:
-                        file["airport_index"] = search(override["ident_value"], override["ident_type"])
-                        if file["airport_index"] != None:
-                            file["ident-found"] = override["ident_type"]
-                            file["valid"] = True
-                            file["invalid_reason"] = None
-                        else:
-                            file["valid"] = False
-                            file["invalid_reason"] = "override_invalid"
-                else:
-                    file["valid"] = False
-                    file["invalid_reason"] = "no_code_found"
-
+    profile_files: List[Dict[
+        "filename": str,
+        "valid": bool,
+        "extension": str,
+        "invalid_reason": str,
+        "airport_index": int,
+        "ident-type": str
+        ]] = folder_scan()
 
     # Check for duplicates based off airport_index values
     for file_index, file in enumerate(profile_files):
@@ -162,7 +119,7 @@ def scan():
                                 ident_type = "ident"
                             else:
                                 ident_type = "iata_code"
-                            if search(airport_code, ident_type) == None:
+                            if index_search(airport_code, ident_type) == None:
                                 rich_print("[red]Airport code could not be found within dataset, try again[/red]")
                                 rich_print("[orange1]Note: If this error is persistent, this airport code may not be present in the dataset in use[/orange1]")
                                 continue
@@ -215,7 +172,75 @@ def scan():
                         log("warn", f"Failed to write new overrides to file with error: {error}")
                         rich_print("[red]Failed to write new overrides to file, action cancelled[/red]")            
 
-def check_overrides(filename):
+def folder_scan() -> object:
+    from rich.progress import track
+    from typing import List, Dict
+    from os import listdir
+
+    from utils import retrieve_config, retrieve_path
+
+    # Retrieve the path to the profiles folder
+    PROFILE_FOLDER_PATH: str = retrieve_path()
+
+    # Retrieve all filenames within the folder
+    profiles: List[str] = listdir(PROFILE_FOLDER_PATH)
+    
+    profile_files: List[Dict[
+        "filename": str,
+        "valid": bool,
+        "extension": str,
+        "invalid_reason": str,
+        "airport_index": int,
+        "ident-type": str
+        ]] = []
+
+    for profile in track(profiles, description="Extension Check"):
+        extension: str = profile.split(".")[-1]
+        extensions: List[str] = retrieve_config("scan_config","recognised_profile_extensions")
+        if extension not in extensions:
+            profile_files.append({"filename": profile.split(".")[0], "valid": False,"extension": extension, "invalid_reason": "invalid_extension"})
+        else:
+            profile_files.append({"filename": profile.split(".")[0], "valid": True, "extension": extension})
+    
+    # Go through each valid file and find a valid airport_index (index is in airports.csv)
+    for file in track(profile_files, description="Ident Search"):
+        if file["valid"] == True:
+            for split_type in retrieve_config("scan_config", "recognised_profile_name_split_types"):
+                filename_parts: List[str] = file["filename"].split(split_type)
+                for part in filename_parts:
+                    if len(part) == 4:
+                        icao_search_result: int | None = index_search(part.upper(), "ident")
+                        if icao_search_result != None:
+                            file["airport_index"] = icao_search_result
+                            file["ident-found"] = "icao"
+                            break
+                    elif len(part) == 3:
+                        iata_search_result: int | None = index_search(part.upper(), "iata_code")
+                        if iata_search_result != None:
+                            file["airport_index"] = iata_search_result
+                            file["ident-found"] = "iata"
+                            break
+                if "airport_index" in file.keys():
+                    break
+            if "airport_index" not in file.keys():
+                override = check_overrides(file["filename"])
+                if override != None:
+                    if override["extension"] == file["extension"]:
+                        file["airport_index"] = index_search(override["ident_value"], override["ident_type"])
+                        if file["airport_index"] != None:
+                            file["ident-found"] = override["ident_type"]
+                            file["valid"] = True
+                            file["invalid_reason"] = None
+                        else:
+                            file["valid"] = False
+                            file["invalid_reason"] = "override_invalid"
+                else:
+                    file["valid"] = False
+                    file["invalid_reason"] = "no_code_found"
+
+    return profile_files
+
+def check_overrides(filename) -> object | None:
     # Check if there are any overrides for a specific filename
     import json
     from utils import log
@@ -225,21 +250,89 @@ def check_overrides(filename):
             overrides = json.load(overrides_file)
     except FileNotFoundError:
         log("error", "No overrides.json file found, overrides will be ignored")
-
-    for override in overrides["override_idents"]:
-        if override["filename"] == filename:
-            return override
+    
+    try:
+        for override in overrides["override_idents"]:
+            if override["filename"] == filename:
+                return override
+    except KeyError:
+        log("error", "No overrides found in the overrides.json file, but a a file was found")
     
     return None
 
-def file_upload():
+def search() -> None:
+    # Search for a specific airport code within the data
+    # target: str, type: str = "ident"
+    from rich import print as rich_print
+    from rich.progress import track
+    from utils import print_line
+    from typing import List, Dict
+    from pandas import read_csv
+    from typer import prompt
+    
+    print_line()
+    rich_print("[bold green]Search[/bold green]")
+    
+    # Get icao or iata decision
+    rich_print("Would you like to search by [green]icao[/green] or [green]iata[/green] code?")#
+    while True:
+        search_type = prompt("Type").lower().strip()
+        if search_type not in ["icao","iata"]:
+            rich_print("[red]Invalid input, try again[/red]")
+            continue
+        else:
+            if search_type == "icao":
+                search_type = "ident"
+            break
+
+    print_line()
+
+    # Get the target code
+    rich_print("Enter the airport code you would like to search for")
+    while True:
+        search_target = prompt("Code").upper().strip()
+        if (len(search_target) == 4 and search_type == "ident") or (len(search_target) == 3 and search_type == "iata"):
+            break
+        else:
+            rich_print("[red]Invalid input, try again[/red]")
+            continue
+    
+    print_line()
+    profile_files: List[Dict[
+        "filename": str,
+        "valid": bool,
+        "extension": str,
+        "invalid_reason": str,
+        "airport_index": int,
+        "ident-type": str
+        ]] = folder_scan()
+
+    success: bool = False
+
+    data = read_csv("./data/airports.csv")
+    # Display the search result
+    for file in track(profile_files, description="Presence Search"):
+        if file["valid"] == True:
+            if data.iloc[file["airport_index"]][search_type] == search_target:
+                found_airport = file
+    
+    rich_print("[bold green]Search Complete[/bold green]")
+    print_line()
+    
+    if found_airport is not None:
+        rich_print(f"[green]Found[/green] a match for the airport code '{search_target}' in the file '{found_airport['filename']}' with extension '{found_airport['extension']}' at index '{found_airport['airport_index']}'")
+    else:
+        rich_print(f"[red]No[/red] match found for the airport code '{search_target}'")
+
+def file_upload() -> None:
     # Allow user to update data for a file manually
     from rich import print as rich_print
     from os import scandir, path
     from utils import print_line, log, print_folder_tree
     from typing import List
     from typer import prompt
-    
+    from shutil import copyfile
+
     print_line()
     print_folder_tree(folder_path="./data")
     
@@ -287,7 +380,6 @@ def file_upload():
         
         if confirm_decision == "confirm":
             log("info", f"User confirmed the changes to the data file {selected_filename} with new file at path {new_data_path}")
-            from shutil import copyfile
             try:
                 copyfile(new_data_path, f"./data/{selected_filename}")
                 log("info", "Successfully copied new data file to data folder")
@@ -295,14 +387,13 @@ def file_upload():
                 log("warn", f"Failed to copy new data file to data folder with error: {error}")
                 rich_print("[red]Failed to copy new data file to data folder, action cancelled[/red]")
     
-
-    
-
-def search(target: str, type: str = "ident") -> int | None:
+def index_search(target: str, type: str = "ident") -> int | None:
     # Binary search algorithm, used to search for the target in the data (an airport code within the airports.csv file) with the specified type (icao or iata)
     import pandas as pd
     data = pd.read_csv("./data/airports.csv")
     
+    target = target.upper().strip()
+
     if type == "icao":
         type = "ident"
     elif type == "iata":
@@ -320,7 +411,6 @@ def search(target: str, type: str = "ident") -> int | None:
         else:
             high = mid - 1
     return None
-    from rich import print as rich_print
 
 def settings():
     # Access settings from the program_config.json file and scan_config.json file
@@ -444,7 +534,6 @@ def settings():
                     rich_print("[red]Invalid input, try again[/red]")
                     continue
 
-
 def setting_datatype(setting):
     # Return the datatype, list_item_datatype (if applicable) of a setting value
     datatype: str = type(setting).__name__
@@ -461,6 +550,7 @@ def help():
     from rich import print as rich_print
     from typer import prompt
     from webbrowser import open
+    from pyclip import copy
 
     print_line()
     rich_print("[bold green]Help[/bold green]")
@@ -472,7 +562,6 @@ def help():
 
         match help_decision:
             case "direct":
-                from webbrowser import open
                 try:
                     open(HELP_PAGE_URL, autoraise=2)
                 except Exception as error:
@@ -481,7 +570,6 @@ def help():
                     input("Press enter to continue...")
                 break
             case "copy":
-                from pyclip import copy
                 try:
                     copy(HELP_PAGE_URL)
                 except Exception as error:
@@ -497,11 +585,10 @@ def help():
                 rich_print("[red]Invalid input, try again[/red]")
                 continue
 
-
-
 if __name__ == "__main__":
-    scan()
+    # scan()
     # help()
     # settings()
     # file_upload()
+    search()
     

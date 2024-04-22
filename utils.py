@@ -51,7 +51,6 @@ def open_profile_folder() -> None:
         log("error", f"Could not open GSX Profile folder (open_profile_folder()) with error: {error}")
         raise Exit()
 
-
 def print_line() -> None:
     from rich import print as rich_print
     from rich.markdown import Markdown
@@ -204,7 +203,6 @@ def airport_data_rq(): # UNUSED
     #     file.write(response.content.decode("utf-8"))
     
     return response.content.decode("utf-8")
-
 
 if __name__ == "__main__":
     pass
