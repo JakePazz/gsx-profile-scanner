@@ -5,15 +5,16 @@ This is a small CLI (command line interface) app intended to help users of [GSX 
 ## Features Explained
 As you will see when you load the app, there is some basic instructions and a table containing all available commands. Below is the same table for reference.
 
-| Command          | Trigger  | Description                                                    |
-| ---------------- | -------- | -------------------------------------------------------------- |
-| Scan Folder      | scan     | Scan the specified profiles folder for GSX Profiles            |
-| Search Airport   | search   | Search for a specific airport in the specified profiles folder |
-| Open Folder      | open     | Open the GSX Pro Profiles folder in file explorer              |
-| Settings         | settings | View and edit the settings for this program                    |
-| Data File Upload | upload   | Upload a new data file to the program                          |
-| Help             | help     | View the help menu                                             |
-| Exit             | exit     | Exit the program                                               |
+| Command             | Trigger  | Description                                                    |
+| ------------------- | -------- | -------------------------------------------------------------- |
+| Scan Folder         | scan     | Scan the specified profiles folder for GSX Profiles            |
+| Search Airport      | search   | Search for a specific airport in the specified profiles folder |
+| Open Folder         | open     | Open the GSX Pro Profiles folder in file explorer              |
+| Settings            | settings | View and edit the settings for this program                    |
+| Data File Upload    | upload   | Upload a new data file to the program                          |
+| Open Program Folder | directory| Open the folder containing this program's files                |
+| Help                | help     | View the help menu                                             |
+| Exit                | exit     | Exit the program                                               |
 
 ## Installation
 
@@ -42,6 +43,7 @@ Allow the user to only see data that meets a criteria specified before the scan 
 - Typing
 - pyclip
 - shutil
+- pathlib
 - requests
 - json
 - datetime

@@ -16,10 +16,8 @@ def main():
     boot()
 
     # Display menu and accept user input for command choice and execute
-    # While loop will mean menu is show again once current action is complete
     while True:
         utils.print_line()
-        # TODO: Add a "Action complete, 'continue' to main menu or 'exit'" prompt here so after each action the user can choose to continue or exit
 
         commands_table = Table("Command", "Trigger", "Description", style="bold yellow")
         commands_table.add_row("Scan Folder","scan", "Scan the specified profiles folder for GSX profiles")
@@ -27,6 +25,7 @@ def main():
         commands_table.add_row("Open Folder", "open", "Open the GSX Pro Profiles folder in file explorer")
         commands_table.add_row("Settings","settings", "View and edit the settings for this program")
         commands_table.add_row("Data File Upload", "upload", "Upload a new data file to the program")
+        commands_table.add_row("Open Program Folder", "directory", "Open the folder containing this program's files")
         commands_table.add_row("Help","help", "View the help menu")
         commands_table.add_row("Exit","exit", "Exit the program")
 
@@ -49,7 +48,7 @@ def main():
                 actn.search()
                 main()
             case "open":
-                utils.open_profile_folder()
+                actn.open_profile_folder()
             case "settings":
                 actn.settings()
                 main()

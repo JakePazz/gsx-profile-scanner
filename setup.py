@@ -230,4 +230,4 @@ def confirm_path(profiles_folder_path: str):
                 continue
 
 if __name__ == "__main__":
-    setup()
+    pass

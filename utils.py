@@ -38,19 +38,6 @@ def retrieve_path() -> None:
         log("error", f"Could not retrieve GSX Profile folder (retrieve_path()) with error: {error}")
         raise Exit()
 
-def open_profile_folder() -> None:
-    """Open the GSX Profile folder using stored path"""
-    from os import startfile
-    from rich import print as rich_print
-    from typer import Exit
-    # Open GSX profiles folder in file explorer
-    try:
-        startfile(retrieve_path())
-    except Exception as error:
-        rich_print("[red]Error while trying to open GSX Profile Folder[/red]")
-        log("error", f"Could not open GSX Profile folder (open_profile_folder()) with error: {error}")
-        raise Exit()
-
 def print_line() -> None:
     from rich import print as rich_print
     from rich.markdown import Markdown
@@ -191,6 +178,15 @@ def display_data(scan_config, return_values: bool = False) -> object:
         return scan_config, prev_value if prev_value != None else "No Prev. Value", scan_config["scan_display_data"]
     else:
         return scan_config
+
+def action_complete_prompt():
+    from rich import print as rich_print
+    from os import system, name
+    
+    rich_print("[bold italic]Action Complete![/bold italic]")
+    input("Press enter to continue:")
+
+    system("cls" if name == "nt" else "clear")
 
 def airport_data_rq(): # UNUSED
     # Request the airports.csv file from website

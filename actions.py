@@ -8,9 +8,9 @@ def scan():
     from typer import prompt
     import json
 
-    from utils import retrieve_config, print_line, yes_or_no, log
+    from utils import retrieve_config, print_line, yes_or_no, log, action_complete_prompt
     
-
+    print_line()
     # Loop through each filename and check it has a valid extension
     profile_files: List[Dict[
         "filename": str,
@@ -171,6 +171,8 @@ def scan():
                     except Exception as error:
                         log("warn", f"Failed to write new overrides to file with error: {error}")
                         rich_print("[red]Failed to write new overrides to file, action cancelled[/red]")            
+    
+    action_complete_prompt()
 
 def folder_scan() -> object:
     from rich.progress import track
@@ -265,7 +267,7 @@ def search() -> None:
     # target: str, type: str = "ident"
     from rich import print as rich_print
     from rich.progress import track
-    from utils import print_line
+    from utils import print_line, action_complete_prompt
     from typing import List, Dict
     from pandas import read_csv
     from typer import prompt
@@ -323,12 +325,14 @@ def search() -> None:
         rich_print(f"[green]Found[/green] a match for the airport code '{search_target}' in the file '{found_airport['filename']}' with extension '{found_airport['extension']}' at index '{found_airport['airport_index']}'")
     else:
         rich_print(f"[red]No[/red] match found for the airport code '{search_target}'")
+    
+    action_complete_prompt()
 
 def file_upload() -> None:
     # Allow user to update data for a file manually
     from rich import print as rich_print
     from os import scandir, path
-    from utils import print_line, log, print_folder_tree
+    from utils import print_line, log, print_folder_tree, action_complete_prompt
     from typing import List
     from typer import prompt
     from shutil import copyfile
@@ -387,6 +391,8 @@ def file_upload() -> None:
                 log("warn", f"Failed to copy new data file to data folder with error: {error}")
                 rich_print("[red]Failed to copy new data file to data folder, action cancelled[/red]")
     
+    action_complete_prompt()
+    
 def index_search(target: str, type: str = "ident") -> int | None:
     # Binary search algorithm, used to search for the target in the data (an airport code within the airports.csv file) with the specified type (icao or iata)
     import pandas as pd
@@ -425,7 +431,7 @@ def settings():
     from typer import prompt
     import json
 
-    from utils import display_data, log, print_line
+    from utils import display_data, log, print_line, action_complete_prompt
 
 
 
@@ -533,6 +539,8 @@ def settings():
                 case _:
                     rich_print("[red]Invalid input, try again[/red]")
                     continue
+            
+    action_complete_prompt()
 
 def setting_datatype(setting):
     # Return the datatype, list_item_datatype (if applicable) of a setting value
@@ -545,6 +553,23 @@ def setting_datatype(setting):
 
     return datatype, list_datatype
 
+def open_profile_folder() -> None:
+    """Open the GSX Profile folder using stored path"""
+    from os import startfile
+    from rich import print as rich_print
+    from typer import Exit
+    from utils import retrieve_path, log, action_complete_prompt
+
+    # Open GSX profiles folder in file explorer
+    try:
+        startfile(retrieve_path())
+    except Exception as error:
+        rich_print("[red]Error while trying to open GSX Profile Folder[/red]")
+        log("error", f"Could not open GSX Profile folder (open_profile_folder()) with error: {error}")
+        raise Exit()
+
+    action_complete_prompt()
+    
 def help():
     from utils import print_line
     from rich import print as rich_print
@@ -584,11 +609,24 @@ def help():
             case _:
                 rich_print("[red]Invalid input, try again[/red]")
                 continue
+    
+    action_complete_prompt()
+
+def open_program_directory():
+    from os import startfile
+    from rich import print as rich_print
+    from utils import log
+    from typer import Exit
+    from pathlib import Path
+
+    current_path = Path().resolve()
+
+    try:
+        startfile(current_path)
+    except Exception as error:
+        rich_print("[red]Error while trying to open GSX Profile Folder[/red]")
+        log("error", f"Could not open GSX Profile folder (open_profile_folder()) with error: {error}")
+        raise Exit()
 
 if __name__ == "__main__":
-    # scan()
-    # help()
-    # settings()
-    # file_upload()
-    search()
-    
+    directory()
