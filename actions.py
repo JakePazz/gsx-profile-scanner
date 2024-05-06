@@ -582,7 +582,7 @@ def help():
     rich_print("Help can be found on an external website.\nTo access it you can: go 'direct' to the webpage, 'copy' to clipboard, 'display' url")
 
     while True:
-        HELP_PAGE_URL = "https://github.com/JakePazz" # TODO: Change to actual help website link
+        HELP_PAGE_URL = "https://github.com/JakePazz/gsx-profile-scanner" # TODO: Change to actual help website link
         help_decision = prompt("Action").lower().strip()
 
         match help_decision:
