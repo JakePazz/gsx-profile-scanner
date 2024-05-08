@@ -2,6 +2,8 @@
 
 This is a small CLI (command line interface) app intended to help users of [GSX Pro](https://www.fsdreamteam.com/products_gsxpro.html) for MSFS 2020, providing features to make life easier when trying to see what profiles you have.
 
+_Using data from [ourairports.com](https://ourairports.com/)_
+
 ## Features Explained
 As you will see when you load the app, there is some basic instructions and a table containing all available commands. Below is the same table for reference.
 
