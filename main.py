@@ -10,7 +10,6 @@ def main():
     
     # Internal imports
     import actions as actn
-    from setup import setup
     import utils
 
     boot()
@@ -61,6 +60,8 @@ def main():
             case "exit":
                 rich_print("[red]Goodbye![/red]")
                 raise typer.Exit()
+            case _:
+                utils.action_complete_prompt(skip_confirmation=True)
 
 def boot() -> None:
     # Check if setup is required by confirming folders and successful_configuration == True

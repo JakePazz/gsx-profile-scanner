@@ -17,7 +17,7 @@ The {severity} of message: 'info', 'error', 'warn'
     with open(f"./logs/{log_file}.txt", "a") as log_file:
 
         if severity not in ['info', 'error', 'warn']:
-            log_file.write(f"\n{prefix("UNKNOWN")} {message.strip()}")
+            log_file.write(f"\n{prefix('UNKNOWN')} {message.strip()}")
         else:
             log_file.write(f"\n{prefix(severity)} {message.strip()}")
 
@@ -160,7 +160,7 @@ def display_data(scan_config, return_values: bool = False) -> object:
             while True:
                 display_data_choices: int = prompt("Selection").split(",").strip()
                 if all(ele in options_list for ele in display_data_choices):
-                    log("info", "Display data choices valid")
+                    log("info", "Display data choices valid.")
                     break
                 else:
                     print("Invalid entry, try again.")
@@ -179,12 +179,13 @@ def display_data(scan_config, return_values: bool = False) -> object:
     else:
         return scan_config
 
-def action_complete_prompt():
+def action_complete_prompt(skip_confirmation=False):
     from rich import print as rich_print
     from os import system, name
     
-    rich_print("[bold italic]Action Complete![/bold italic]")
-    input("Press enter to continue:")
+    if not skip_confirmation:
+        rich_print("[bold italic]Action Complete![/bold italic]")
+        input("Press enter to continue:")
 
     system("cls" if name == "nt" else "clear")
 

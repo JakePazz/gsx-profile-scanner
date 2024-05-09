@@ -571,7 +571,7 @@ def open_profile_folder() -> None:
     action_complete_prompt()
     
 def help():
-    from utils import print_line
+    from utils import print_line, action_complete_prompt
     from rich import print as rich_print
     from typer import prompt
     from webbrowser import open
@@ -629,4 +629,4 @@ def open_program_directory():
         raise Exit()
 
 if __name__ == "__main__":
-    directory()
+    pass

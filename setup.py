@@ -43,31 +43,40 @@ def setup():
     # if system username not found, get user to manually enter it
     username: str
     try:
-        username = os.getlogin() 
+        username = os.getlogin()
     except Exception as error:
         log("warn", f"Could not successfully automatically retrieve user's username from system with error: {error}")
         rich_print("[bold red]Error![/bold red] Your system username could not be retrieved automatically. Enter it yourself below.")
         username = typer.prompt("Enter username")
+        # TODO: Add validation by checking that an os.file.is_path() (maybe?) returns true for a path that always exists (eg: system32)
+
         
     profiles_folder_path: str = f"C:/Users/{username}/AppData/Roaming/virtuali/GSX/MSFS"
 
     # Check within expected profiles folder path for either a .ini or .py file to verify that this is (likely) the profiles folder
     valid_filetype_found: bool = False
-    with os.scandir(profiles_folder_path) as profiles_folder:
-        for file in profiles_folder:
+    try:
+        with os.scandir(profiles_folder_path) as profiles_folder:
+            for file in profiles_folder:
                 if file.is_file() and (file.name.endswith(".ini") or file.name.endswith(".py")):
                     log("info",f"Valid filetype found within the specified path of ({profiles_folder_path})")
                     valid_filetype_found = True
                     break
+    except FileNotFoundError as error:
+        log("error", f"Failed to find the profiles folder with the expected path (forcing user to complete manual path entry): {error}")
+        # Force the user to manually enter the path
+        profiles_folder_path = manual_path_entry()
+
     if not valid_filetype_found:
         rich_print("[bold dark_orange]Could not find a valid .ini or .py file within the expected profiles folder[/bold dark_orange]")
         rich_print("[italic]Note: This error will occur if your profiles folder is empty yet valid; if this is the case respond with 'y'[/italic]")
-        if confirm_path() == True:
+        if confirm_path(profiles_folder_path=profiles_folder_path) == False:
             profiles_folder_path = manual_path_entry()
 
     scan_config: dict = {
             "profile_folder_path": profiles_folder_path
     }
+
     log("info",f"Scan config created with profile folder path: {profiles_folder_path}")
 
     scan_config = display_data(scan_config)
@@ -144,7 +153,7 @@ def setup():
                             "ini",
                             "py"
                         ]
-
+    print_line()
     # Check if there is a overrides.json file in the configs folder and ask user if they want to use it or replace it
     if os.path.exists("./data/overrides.json"):
         rich_print("[bold yellow]Overrides.json file found in data folder[/bold yellow]")
@@ -197,15 +206,15 @@ def setup():
         rich_print("[bold red]Error![/bold red] An error occurred writing to the program config to file. Setup failed.")
         raise typer.Exit()
     
-    rich_print("[green bold]Setup compelete![/green bold]")
+    rich_print("[green bold]Setup complete![/green bold]")
     
 def manual_path_entry() -> str:
     # Allow user to manually enter the path of their GSX Profile folder
     print_line()
     rich_print("The system is unable to identify your GSX Pro Profile Path. Please enter it manually below")
     while True:
-        path_input = prompt("Profile Folder Path")
-        if isdir(path_input):
+        path_input = typer.prompt("Profile Folder Path")
+        if os.path.isdir(path_input):
             log("info", "User successfully manually entered the path for GSX Profile folder")
             rich_print("[green]Path accepted[/green]")
             return path_input
@@ -230,4 +239,4 @@ def confirm_path(profiles_folder_path: str):
                 continue
 
 if __name__ == "__main__":
-    pass
+    setup()

@@ -696,3 +696,39 @@
 [info] [2024-05-05T12:43:13.061170] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
 [info] [2024-05-05T12:43:13.210046] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
 [info] [2024-05-05T12:43:13.350028] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[error] [2024-05-09T15:56:20.954294] Failed to find the profiles folder with the expected path (forcing user to complete manual path entry): [WinError 3] The system cannot find the path specified: 'C:/Users/jpazzard411/AppData/Roaming/virtuali/GSX/MSFS'
+[error] [2024-05-09T15:59:33.326743] Failed to find the profiles folder with the expected path (forcing user to complete manual path entry): [WinError 3] The system cannot find the path specified: 'C:/Users/jpazzard411/AppData/Roaming/virtuali/GSX/MSFS'
+[info] [2024-05-09T15:59:36.640541] User successfully manually entered the path for GSX Profile folder
+[error] [2024-05-09T15:59:55.146903] Failed to find the profiles folder with the expected path (forcing user to complete manual path entry): [WinError 3] The system cannot find the path specified: 'C:/Users/jpazzard411/AppData/Roaming/virtuali/GSX/MSFS'
+[info] [2024-05-09T15:59:57.525081] User successfully manually entered the path for GSX Profile folder
+[info] [2024-05-09T16:00:32.500493] User successfully manually entered the path for GSX Profile folder
+[info] [2024-05-09T16:00:32.503093] Scan config created with profile folder path: H:\Programming\Python\fake_profiles_folder
+[info] [2024-05-09T16:01:01.882979] User selected recommended as the display data choice
+[info] [2024-05-09T16:01:07.117705] User selected continue as file extensions decision
+[info] [2024-05-09T16:01:07.119071] User chose to use default file extensions of .ini and .py
+[info] [2024-05-09T16:01:17.263908] User selected y as decision for using overrides.json file
+[info] [2024-05-09T16:01:17.265510] User chose not to use the overrides.json file for their scan
+[info] [2024-05-09T16:01:17.268834] Scan config created successfully
+[info] [2024-05-09T16:01:17.268834] Successfully wrote to program_config file
+[info] [2024-05-09T16:12:32.709534] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:12:32.712526] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:12:32.736034] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:12:32.966687] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:12:33.206778] Successfully retrieved item (scan_display_data) from file (scan_config)
+[info] [2024-05-09T16:13:35.796897] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:13:35.798492] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:13:35.820330] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:13:36.025026] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:37.036277] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:18:37.037917] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:18:37.039302] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:18:37.064664] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:37.301925] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:37.531667] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:42.053016] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:18:42.054786] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:18:42.055787] Successfully retrieved item (recognised_profile_extensions) from file (scan_config)
+[info] [2024-05-09T16:18:42.077682] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:42.265720] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:42.477448] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
+[info] [2024-05-09T16:18:42.687244] Successfully retrieved item (scan_display_data) from file (scan_config)
