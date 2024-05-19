@@ -309,7 +309,7 @@ def search() -> None:
         "ident-type": str
         ]] = folder_scan()
 
-    success: bool = False
+    found_airport = None; # Holds wanted file obj of airport
 
     data = read_csv("./data/airports.csv")
     # Display the search result
@@ -582,7 +582,7 @@ def help():
     rich_print("Help can be found on an external website.\nTo access it you can: go 'direct' to the webpage, 'copy' to clipboard, 'display' url")
 
     while True:
-        HELP_PAGE_URL = "https://github.com/JakePazz/gsx-profile-scanner" # TODO: Change to actual help website link
+        HELP_PAGE_URL = "https://github.com/JakePazz/gsx-profile-scanner" # Must be updated if different page used
         help_decision = prompt("Action").lower().strip()
 
         match help_decision:
@@ -615,7 +615,7 @@ def help():
 def open_program_directory():
     from os import startfile
     from rich import print as rich_print
-    from utils import log
+    from utils import log, action_complete_prompt
     from typer import Exit
     from pathlib import Path
 
@@ -627,6 +627,8 @@ def open_program_directory():
         rich_print("[red]Error while trying to open GSX Profile Folder[/red]")
         log("error", f"Could not open GSX Profile folder (open_profile_folder()) with error: {error}")
         raise Exit()
+    
+    action_complete_prompt()
 
 if __name__ == "__main__":
     pass

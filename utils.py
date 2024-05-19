@@ -27,12 +27,20 @@ def retrieve_path() -> None:
     from json import load
     from rich import print as rich_print
     from typer import Exit
+    from os import path
+    from typer import Exit
 
     # Retrieve path of GSX profiles folder (only for user after setup)
     try:
         with open("./configs/scan_config.json","r") as scan_config_file:
             scan_config = load(scan_config_file)
-            return scan_config["profile_folder_path"]
+            folder_path = scan_config["profile_folder_path"]
+            if path.isdir(folder_path):
+                return folder_path
+            else:
+                log("error", f"Could not retrieve path at '{folder_path}'")
+                rich_print("[red]Could not retrieve GSX Profile Folder, please check the config setup.[/red]")
+                raise Exit()
     except Exception as error:
         rich_print("[red]Error while trying to retrieve GSX Profile Folder[/red]")
         log("error", f"Could not retrieve GSX Profile folder (retrieve_path()) with error: {error}")
@@ -191,15 +199,22 @@ def action_complete_prompt(skip_confirmation=False):
 
 def airport_data_rq(): # UNUSED
     # Request the airports.csv file from website
-    import requests as rq
-    import pandas as pd
+    from requests import get
+    from os import rename
+    from datetime import datetime
+    from rich import print as rich_print
 
-    response = rq.get("https://davidmegginson.github.io/ourairports-data/airports.csv", allow_redirects=True)
+    response = get("https://davidmegginson.github.io/ourairports-data/airports.csv", allow_redirects=True)
 
-    # with open("./data/airports_requested.csv", "w", encoding="utf-8") as file:
-    #     file.write(response.content.decode("utf-8"))
-    
-    return response.content.decode("utf-8")
+    # Rename existing data and store it so that it can be reverted manually if necessary
+    rename("./data/airports.csv", f"./data/old-airports-{datetime.now()}.csv")
+
+
+    with open("./data/airports.csv", "w", encoding="utf-8") as file:
+        
+        file.write(response.content.decode("utf-8"))
+
+    # TODO: Finish this function and add to menu
 
 if __name__ == "__main__":
     pass

@@ -35,6 +35,8 @@ def main():
     """
     1. Use the 'commands' box to view all available commands
     2. To run a command, type the trigger word in the input box
+    3. Once presented with the 'Action Complete!' message press enter to return here and select a new action
+    4. Start again or type 'exit' as shown above to quit the program
     """), title="Instructions", style="bold red", title_align="left")
     )
         
@@ -48,11 +50,15 @@ def main():
                 main()
             case "open":
                 actn.open_profile_folder()
+                main()
             case "settings":
                 actn.settings()
                 main()
             case "upload":
                 actn.file_upload()
+                main()
+            case "directory":
+                actn.open_program_directory()
                 main()
             case "help":
                 actn.help()
@@ -61,6 +67,7 @@ def main():
                 rich_print("[red]Goodbye![/red]")
                 raise typer.Exit()
             case _:
+                print("AAA")
                 utils.action_complete_prompt(skip_confirmation=True)
 
 def boot() -> None:
