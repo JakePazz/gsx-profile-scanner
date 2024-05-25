@@ -5,6 +5,7 @@ This is a small CLI (command line interface) app intended to help users of [GSX 
 _Using data from [ourairports.com](https://ourairports.com/)_
 
 ## Features Explained
+
 As you will see when you load the app, there is some basic instructions and a table containing all available commands. Below is the same table for reference.
 
 | Command             | Trigger  | Description                                                    |
@@ -23,18 +24,20 @@ As you will see when you load the app, there is some basic instructions and a ta
 1. Download the latest release from this page (on the right side of your screen)
 2. And more that I need to add once I am certain on the process...
 
-# Potential Improvements
+## Potential Improvements
 
 Below are some features/changes I am considering adding at some point (maybe never)
 
-#### Refactoring
+### Refactoring
 
 Not a new feature, but there is certainly areas of improvement in the app that I can leverage to improve performance/speed (eg: improve search function to not rely on folder_scan())
 
-#### Mass profile install
+### Mass profile install
+
 Allows the user to specify a target folder, that will have all files/folders (.zip, .rar, .ini, .py etc.) and automatically find the valid profile files and copy them to the specified profiles folder
 
-#### Scan Filtering
+### Scan Filtering
+
 Allow the user to only see data that meets a criteria specified before the scan is started (region, airport size etc.); may require more data from [ourairports.com](https://ourairports.com/)
 
 ## Packages in use
@@ -42,7 +45,6 @@ Allow the user to only see data that meets a criteria specified before the scan 
 - Pandas
 - Rich
 - Typer
-- Typing
 - pyclip
 - shutil
 - pathlib
@@ -51,3 +53,5 @@ Allow the user to only see data that meets a criteria specified before the scan 
 - datetime
 - webbrowser
 - os
+
+> Modules that are required to be downloaded for development are included within  `./docs/requirements.txt` to be installed using `pip install -r requirements.txt`

@@ -2,8 +2,6 @@
 import os
 import typer
 from rich import print as rich_print
-from rich.panel import Panel
-from rich.table import Table
 from rich import box
 from json import dumps
 from typing import List
@@ -50,7 +48,6 @@ def setup():
         username = typer.prompt("Enter username")
         # TODO: Add validation by checking that an os.file.is_path() (maybe?) returns true for a path that always exists (eg: system32)
 
-        
     profiles_folder_path: str = f"C:/Users/{username}/AppData/Roaming/virtuali/GSX/MSFS"
 
     # Check within expected profiles folder path for either a .ini or .py file to verify that this is (likely) the profiles folder
