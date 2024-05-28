@@ -197,24 +197,6 @@ def action_complete_prompt(skip_confirmation=False):
 
     system("cls" if name == "nt" else "clear")
 
-def airport_data_rq(): # UNUSED
-    # Request the airports.csv file from website
-    from requests import get
-    from os import rename
-    from datetime import datetime
-    from rich import print as rich_print
-
-    response = get("https://davidmegginson.github.io/ourairports-data/airports.csv", allow_redirects=True)
-
-    # Rename existing data and store it so that it can be reverted manually if necessary
-    rename("./data/airports.csv", f"./data/old-airports-{datetime.now()}.csv")
-
-
-    with open("./data/airports.csv", "w", encoding="utf-8") as file:
-        
-        file.write(response.content.decode("utf-8"))
-
-    # TODO: Finish this function and add to menu
 
 if __name__ == "__main__":
     pass

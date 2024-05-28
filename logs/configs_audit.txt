@@ -1,3 +1,0 @@
-
-[info] [2024-04-13T01:58:26.157646] Changed 'recognised_profile_extensions' to new value of '['ini', 'py', 'txt', 'cfg']' from '['ini', 'py']'
-[info] [2024-05-19T02:24:46.007928] Changed 'profile_folder_path' to new value of 'C:\Users\Jake\AppData\Roaming\Virtuali\GSX\MSFS' from 'H:\Programming\Python\fake_profiles_folder'

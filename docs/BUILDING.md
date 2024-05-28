@@ -160,4 +160,22 @@ pyinstaller --noconfirm --onefile --console --icon "[icon.ico file path]" --name
 
 ### [2]
 
-TODO: Add next step for packaging it up using NSIS
+Create a new folder for the 'program files' where the following files should be copied:
+
+- data folder (__must contain airports.csv__)
+- actions.py
+- setup.py
+- utils.py
+- Executable (.exe)
+
+### [3]
+
+Next convert this folder into a zip file
+
+### [4]
+
+Launch NSIS and select 'Installer based on ZIP file' provide the path to the zip file and otherwise leave everything default (inc. default folder)
+
+### [5]
+
+Distribute this .exe (installer) as this contains all the files needed.

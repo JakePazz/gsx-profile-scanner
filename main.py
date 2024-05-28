@@ -24,6 +24,7 @@ def main():
         commands_table.add_row("Open Folder", "open", "Open the GSX Pro Profiles folder in file explorer")
         commands_table.add_row("Settings","settings", "View and edit the settings for this program")
         commands_table.add_row("Data File Upload", "upload", "Upload a new data file to the program")
+        commands_table.add_row("Data File Update", "update", "Download the newest dataset from 'ourairports.com/data'")
         commands_table.add_row("Open Program Folder", "directory", "Open the folder containing this program's files")
         commands_table.add_row("Help","help", "View the help menu")
         commands_table.add_row("Exit","exit", "Exit the program")
@@ -57,6 +58,9 @@ def main():
             case "upload":
                 actn.file_upload()
                 main()
+            case "update":
+                actn.dataset_update()
+                main()
             case "directory":
                 actn.open_program_directory()
                 main()
@@ -77,6 +81,7 @@ def boot() -> None:
     from rich import print as rich_print
     from rich.panel import Panel
     from setup import setup
+    
     if not path.exists("./configs"):
         rich_print(Panel("[bright_yellow]Invalid installation found (no configs folder), launching setup[/bright_yellow]", title="Critical Error", style="bold orange1", title_align="left"))
         setup()

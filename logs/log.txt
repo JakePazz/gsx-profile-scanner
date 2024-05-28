@@ -1035,3 +1035,32 @@
 [info] [2024-05-24T19:58:29.995096] Successfully retrieved item (recognised_profile_name_split_types) from file (scan_config)
 [info] [2024-05-24T19:58:30.130824] Successfully retrieved item (scan_display_data) from file (scan_config)
 [info] [2024-05-24T19:58:34.073668] User chose to view invalid data
+[error] [2024-05-29T00:12:17.332712] Failed to rename old data file: [WinError 123] The filename, directory name, or volume label syntax is incorrect: './data/airports.csv' -> './data/old-airports-2024-05-29 00:12:17.332712.csv'
+[info] [2024-05-29T00:12:17.354732] Deleted old data file
+[error] [2024-05-29T00:15:53.851579] Failed to rename old data file: 'str' object cannot be interpreted as an integer
+[info] [2024-05-29T00:15:53.872599] Deleted old data file
+[error] [2024-05-29T00:16:18.396971] Failed to rename old data file: 'str' object cannot be interpreted as an integer
+[info] [2024-05-29T00:16:18.417990] Deleted old data file
+[info] [2024-05-29T00:16:56.436514] Renamed old data file to 'old-airports-2024-05-29T00-16-44.csv' for manual revert if necessary
+[info] [2024-05-29T00:20:26.537092] Renamed old data file to 'old-airports-2024-05-29T00-19-59.csv' for manual revert if necessary
+[error] [2024-05-29T00:21:01.726102] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-21-01.csv'
+[error] [2024-05-29T00:21:01.747121] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:21:33.220401] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-21-33.csv'
+[error] [2024-05-29T00:21:33.241575] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:23:38.021340] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-23-38.csv'
+[error] [2024-05-29T00:23:38.041359] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:24:02.273510] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-24-02.csv'
+[error] [2024-05-29T00:24:02.293529] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:24:16.031829] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-24-16.csv'
+[error] [2024-05-29T00:24:16.053849] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:29:23.143560] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-29-23.csv'
+[error] [2024-05-29T00:29:23.163579] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:29:50.992474] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-29-50.csv'
+[error] [2024-05-29T00:29:51.012492] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[error] [2024-05-29T00:30:25.695207] Failed to rename old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv' -> './data/old-airports-2024-05-29T00-30-25.csv'
+[error] [2024-05-29T00:30:25.717749] Failed to delete old data file: [WinError 2] The system cannot find the file specified: './data/airports.csv'
+[info] [2024-05-29T00:35:18.873365] Renamed old data file to 'old-airports-2024-05-29T00-35-18.csv' for manual revert if necessary
+[info] [2024-05-29T00:38:35.735125] Renamed old data file to 'old-airports-2024-05-29T00-38-35.csv' for manual revert if necessary
+[info] [2024-05-29T00:41:45.698075] Renamed old data file to 'old-airports-2024-05-29T00-41-45.csv' for manual revert if necessary
+[info] [2024-05-29T00:50:09.698722] Renamed old data file to 'old-airports-2024-05-29T00-50-09.csv' for manual revert if necessary
+[info] [2024-05-29T00:53:56.758025] User cancelled setup

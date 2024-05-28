@@ -135,7 +135,7 @@ def scan():
 
                 print_line()
                 rich_print("Confirm the changes by entering [green]'confirm'[/green] or [red]'cancel'[/red] to stop the changes")
-                rich_print("[gold1]Note: This will automatically override any existing overrides for this filename and extension/filetype[/gold1]")
+                rich_print("[orange1]Note: This will automatically override any existing overrides for this filename and extension/filetype[/orange1]")
                 while True:
                     try:
                         confirm_decision = prompt("Action").lower().strip()
@@ -629,6 +629,73 @@ def open_program_directory():
         raise Exit()
     
     action_complete_prompt()
+
+def dataset_update():
+    # Request the airports.csv file from website
+    from requests import get
+    from os import rename, remove
+    from datetime import datetime
+    from rich import print as rich_print
+    from utils import log, action_complete_prompt
+    from typer import Exit
+    from pandas import read_csv, DataFrame
+    from io import StringIO
+        
+
+    # Rename existing data and store it so that it can be reverted manually if necessary
+    try:
+        datetime_now = str(datetime.now()).replace(" ", "T").replace(":", "-").split(".")[0]
+        rename("./data/airports.csv", f"./data/old-airports-{datetime_now}.csv")
+        log("info", f"Renamed old data file to 'old-airports-{datetime_now}.csv' for manual revert if necessary")
+        rich_print("[orange1]Note: Old data has been saved within the ./data folder with a timestamp incase a manual revert to previous data is required.[/orange1]")
+    except Exception as error:
+        log("error", f"Failed to rename old data file: {error}")
+        rich_print("[red]Failed to rename old data file, deleting instead.[/red]")
+        try:
+            remove("./data/airports.csv")
+            log("info", "Deleted old data file")
+        except Exception as error:
+            log("error", f"Failed to delete old data file: {error}")
+            rich_print("[orange1]Failed to delete old data file, continuing process.[/orange1]")
+        
+    
+    
+    # Download new data
+    try:
+        response = get("https://davidmegginson.github.io/ourairports-data/airports.csv", allow_redirects=True)
+        rich_print("[green]New data has been successfully downloaded[/green]")
+    except Exception as error:
+        log("error", f"Could not retrieve new airports data: {error}")
+        rich_print("[red]Failed to retrieve and write new airports data, process failed.[/red]")
+        raise Exit()
+    
+    # Load data into pandas (StringIO loads from string but treats it as file object? Maybe) and then cleans it by dropping unused columns
+    try:
+        data = read_csv(StringIO(response.text))
+    except Exception as error:
+        log("error", f"Failed to load data into a pandas dataframe: {error}")
+        rich_print("[red]Failed to load new data into pandas csv file, process failed.[/red]")
+        raise Exit()
+
+
+    # Clean data
+    try:
+        data.drop(columns=["home_link", "wikipedia_link", "local_code", "id"], inplace=True)
+    except KeyError as error:
+        rich_print("[red]Failed to clean new data, continuing with uncleaned data[/red]")
+        log("warn", f"Failed to clean new data with due to KeyError where column headers were not present within data: {error}")
+    
+    # Save data
+    try:
+        data.to_csv("./data/airports.csv", index=False)
+        rich_print("[green]New data has been saved to file[/green]")
+    except Exception as error:
+        log("error", f"Failed to save new data to file: {error}")
+        rich_print("[red]Failed to save new data to file, process failed.[/red]")
+        raise Exit()
+    
+    action_complete_prompt()
+
 
 if __name__ == "__main__":
     pass
