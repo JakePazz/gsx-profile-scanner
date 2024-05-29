@@ -1,6 +1,6 @@
 # GSX Profile Scanner
 
-This is a small CLI (command line interface) app intended to help users of [GSX Pro](https://www.fsdreamteam.com/products_gsxpro.html) for MSFS 2020, providing features to make life easier when trying to see what profiles you have.
+This is a small CLI (command line interface) app intended to help users of [GSX Pro](https://www.fsdreamteam.com/products_gsxpro.html) for MSFS 2020, providing features to make life easier when trying to see what profiles you have. **Windows only.**
 
 _Using data from [ourairports.com](https://ourairports.com/)_
 
@@ -15,14 +15,20 @@ As you will see when you load the app, there is some basic instructions and a ta
 | Open Folder         | open     | Open the GSX Pro Profiles folder in file explorer              |
 | Settings            | settings | View and edit the settings for this program                    |
 | Data File Upload    | upload   | Upload a new data file to the program                          |
-| Open Program Folder | directory| Open the folder containing this program's files                |
+| Data File Update    | update   | Upload a new data file to the program                          |
+| Open Program Folder | directory| Download the newest dataset from 'ourairports.com/data'        |
 | Help                | help     | View the help menu                                             |
 | Exit                | exit     | Exit the program                                               |
 
+Note: The **update** command uses the data from [ourairports.com/data](https://ourairports.com/data/) but gets the data directly from [here](https://davidmegginson.github.io/ourairports-data/airports.csv)
+
 ## Installation
 
-1. Download the latest release from this page (on the right side of your screen)
-2. And more that I need to add once I am certain on the process...
+1. Download the latest release
+2. Run the installer
+3. Run the program from the executable within the installed files and complete setup
+
+_It is recommended to create a shortcut/pin the program before you lose it_
 
 ## Potential Improvements
 
