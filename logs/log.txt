@@ -1,0 +1,9 @@
+
+[info] [2024-05-29T00:55:46.799518] Valid filetype found within the specified path of (C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS)
+[info] [2024-05-29T00:55:46.800520] Scan config created with profile folder path: C:/Users/Jake/AppData/Roaming/virtuali/GSX/MSFS
+[info] [2024-05-29T00:55:49.516323] User selected recommended as the display data choice
+[info] [2024-05-29T00:55:51.464004] User selected continue as file extensions decision
+[info] [2024-05-29T00:55:51.465005] User chose to use default file extensions of .ini and .py
+[info] [2024-05-29T00:55:51.466005] No overrides.json file found in configs folder
+[info] [2024-05-29T00:55:51.470010] Scan config created successfully
+[info] [2024-05-29T00:55:51.471010] Successfully wrote to program_config file
