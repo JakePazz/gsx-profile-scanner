@@ -38,6 +38,10 @@ Below are some features/changes I am considering adding at some point (maybe nev
 
 Not a new feature, but there is certainly areas of improvement in the app that I can leverage to improve performance/speed (eg: improve search function to not rely on folder_scan())
 
+### Profile Finder
+
+If the user searches for a profile and it is not found (or if it is selected to do so by the end user in the menu), an airport code will be searched for within the gsx profiles section of the flightsim.to website for the user to find a profile they want to use
+
 ### Mass profile install
 
 Allows the user to specify a target folder, that will have all files/folders (.zip, .rar, .ini, .py etc.) and automatically find the valid profile files and copy them to the specified profiles folder
