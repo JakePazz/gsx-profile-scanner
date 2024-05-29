@@ -1,6 +1,6 @@
 # Building Guide
 
-Use these instructions to create a distributable installer (and executable) to allow the program to be used on a system without a python interpreter. This guide is primarily for future me when I forget how to do this, but can be also be used as a guide if adding your own changes/additions.
+Use these instructions to create a distributable installer (and executable) to allow the program to be used on a system without a python interpreter. This guide is primarily for future me when I forget how to do this, but can also be used as a guide if adding your own changes/additions.
 
 ## Steps
 
