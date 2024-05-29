@@ -1,6 +1,6 @@
 # GSX Profile Scanner
 
-This is a small CLI (command line interface) app intended to help users of [GSX Pro](https://www.fsdreamteam.com/products_gsxpro.html) for MSFS 2020, providing features to make life easier when trying to see what profiles you have. **Windows only.**
+This is a small CLI (command line interface) app intended to help users of [GSX Pro](https://www.fsdreamteam.com/products_gsxpro.html) for MSFS 2020, providing a few simple features to make life easier when trying to see what profiles you have. **Windows only.**
 
 _Using data from [ourairports.com](https://ourairports.com/)_
 
@@ -28,7 +28,7 @@ Note: The **update** command uses the data from [ourairports.com/data](https://o
 2. Run the installer
 3. Run the program from the executable within the installed files and complete setup
 
-_It is recommended to create a shortcut/pin the program before you lose it_
+_It is recommended to create a shortcut/pin the program to make it easier to find_
 
 ## Potential Improvements
 
